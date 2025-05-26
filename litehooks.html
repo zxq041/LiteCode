@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiteHook's - Zaawansowany System Webhook</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4169E1',secondary:'#1E293B'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #0F172A;
+font-family: 'Inter', sans-serif;
+color: #F8FAFC;
+}
+@keyframes fade-in {
+from { opacity: 0; transform: translateY(-1rem); }
+to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+animation: fade-in 0.3s ease-out;
+}
+.geometric-bg {
+position: absolute;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: -1;
+}
+.geometric-shape {
+position: absolute;
+opacity: 0.1;
+border-radius: 50%;
+background: linear-gradient(45deg, #4169E1, #7B68EE);
+animation: float 15s infinite ease-in-out;
+}
+.shape1 {
+width: 300px;
+height: 300px;
+top: 10%;
+left: 5%;
+animation-delay: 0s;
+}
+.shape2 {
+width: 200px;
+height: 200px;
+bottom: 10%;
+right: 5%;
+animation-delay: 2s;
+}
+.shape3 {
+width: 150px;
+height: 150px;
+top: 40%;
+right: 15%;
+animation-delay: 4s;
+}
+.shape4 {
+width: 100px;
+height: 100px;
+bottom: 30%;
+left: 15%;
+animation-delay: 6s;
+}
+.triangle {
+position: absolute;
+width: 0;
+height: 0;
+border-left: 100px solid transparent;
+border-right: 100px solid transparent;
+border-bottom: 173px solid rgba(65, 105, 225, 0.1);
+animation: rotate 20s infinite linear;
+}
+.triangle1 {
+top: 20%;
+left: 30%;
+animation-delay: 1s;
+}
+.triangle2 {
+bottom: 20%;
+right: 30%;
+animation-delay: 3s;
+}
+@keyframes float {
+0%, 100% {
+transform: translateY(0) rotate(0deg);
+}
+50% {
+transform: translateY(-20px) rotate(5deg);
+}
+}
+@keyframes rotate {
+0% {
+transform: rotate(0deg);
+}
+100% {
+transform: rotate(360deg);
+}
+}
+.premium-btn {
+background: linear-gradient(45deg, #FFD700, #FFA500);
+}
+.webhook-preview {
+background-color: #2D3748;
+border-left: 4px solid #4169E1;
+}
+.embed-color-picker::-webkit-color-swatch {
+border: none;
+border-radius: 4px;
+}
+.embed-color-picker::-webkit-color-swatch-wrapper {
+padding: 0;
+}
+.modal {
+background-color: rgba(0, 0, 0, 0.7);
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 50;
+animation: fadeIn 0.3s ease-in-out;
+}
+.modal-content {
+background: linear-gradient(135deg, #1E293B, #0F172A);
+border: 1px solid #334155;
+animation: slideIn 0.3s ease-in-out;
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+width: 90%;
+max-width: 800px;
+margin: 2rem auto;
+}
+#jsonOutput {
+background: #0F172A;
+padding: 1rem;
+border-radius: 0.5rem;
+font-family: 'Fira Code', monospace;
+line-height: 1.5;
+tab-size: 2;
+}
+.toggle-switch {
+transition: all 0.3s ease;
+}
+.toggle-switch:hover {
+opacity: 0.9;
+transform: scale(1.05);
+}
+.toggle-switch span {
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+@keyframes slideIn {
+from { transform: translateY(-20px); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+.premium-feature {
+border-left: 2px solid #FFD700;
+}
+.input-field {
+background-color: #1E293B;
+border: 1px solid #334155;
+color: #F8FAFC;
+transition: all 0.3s ease;
+}
+.input-field:focus {
+border-color: #4169E1;
+box-shadow: 0 0 0 2px rgba(65, 105, 225, 0.2);
+}
+.btn {
+transition: all 0.3s ease;
+}
+.btn:hover {
+transform: translateY(-2px);
+}
+.discord-embed {
+background-color: #2D3748;
+border-radius: 4px;
+}
+</style>
+</head>
+<body class="min-h-screen">
+<!-- Geometric Background -->
+<div class="geometric-bg">
+<div class="geometric-shape shape1"></div>
+<div class="geometric-shape shape2"></div>
+<div class="geometric-shape shape3"></div>
+<div class="geometric-shape shape4"></div>
+<div class="triangle triangle1"></div>
+<div class="triangle triangle2"></div>
+</div>
+<!-- Header -->
+<header class="py-4 px-6 flex justify-between items-center border-b border-gray-800">
+<div class="flex items-center">
+<img src="https://i.imgur.com/9tHrZL4.png" alt="LiteHook's Logo" class="h-10 mr-3">
+<h1 class="text-2xl font-bold text-primary">LiteHook's</h1>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative group">
+<button class="flex items-center space-x-2 px-4 py-2 rounded-button bg-gray-800 hover:bg-gray-700 transition-all">
+<span class="font-bold text-primary">LiteHook's</span>
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+<div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+<a href="https://discord.gg/udd9cmw6nk" target="_blank" class="flex items-center px-4 py-2 text-sm hover:bg-gray-700">
+<div class="w-5 h-5 flex items-center justify-center mr-2">
+<i class="ri-discord-fill"></i>
+</div>
+Discord
+</a>
+<button id="poradnikBtn" class="flex items-center px-4 py-2 text-sm hover:bg-gray-700 w-full text-left">
+<div class="w-5 h-5 flex items-center justify-center mr-2">
+<i class="ri-book-open-line"></i>
+</div>
+Poradnik
+</button>
+</div>
+</div>
+<button id="premiumBtn" class="premium-btn flex items-center space-x-2 px-4 py-2 text-gray-900 font-semibold rounded-button whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-vip-crown-fill"></i>
+</div>
+<span>Premium</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-8">
+<h1 class="text-3xl font-bold text-center mb-8">Zaawansowany System Webhook</h1>
+<div class="flex flex-col lg:flex-row gap-6">
+<!-- Left Side - Webhook Configuration -->
+<div class="w-full lg:w-3/5 space-y-6">
+<div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+<h2 class="text-xl font-semibold mb-4">Konfiguracja Webhooka</h2>
+<div class="mb-4">
+<label class="block text-sm font-medium mb-2">Link Webhooka</label>
+<div class="flex">
+<input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." class="input-field w-full px-4 py-2 rounded-l-button border-none">
+<button id="validateWebhook" class="bg-primary text-white px-4 py-2 rounded-r-button whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-check-line"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="space-y-6 mt-6">
+<!-- Author Section -->
+<div class="bg-gray-700 rounded-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-medium">Autor</h3>
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600 toggle-switch">
+<input type="checkbox" id="authorToggle" class="sr-only peer" checked>
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full shadow-md transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+</label>
+</div>
+<div id="authorSection" class="space-y-3">
+<div>
+<label class="block text-sm font-medium mb-1">Nazwa</label>
+<input type="text" id="authorName" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="Nazwa autora">
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">URL Avatara</label>
+<input type="text" id="authorIcon" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="https://example.com/avatar.png">
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">URL</label>
+<input type="text" id="authorUrl" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="https://example.com">
+</div>
+</div>
+</div>
+<!-- Body Section -->
+<div class="bg-gray-700 rounded-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-medium">Treść</h3>
+<div class="flex items-center space-x-3">
+<label class="flex items-center space-x-2">
+<span class="text-sm">Kolor:</span>
+<input type="color" id="embedColor" value="#4169E1" class="embed-color-picker w-8 h-8 rounded cursor-pointer">
+</label>
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600">
+<input type="checkbox" id="bodyToggle" class="sr-only peer" checked>
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+</label>
+</div>
+</div>
+<div id="bodySection" class="space-y-3">
+<div>
+<label class="block text-sm font-medium mb-1">Tytuł</label>
+<input type="text" id="embedTitle" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="Tytuł embeda">
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">Opis</label>
+<textarea id="embedDescription" class="input-field w-full px-4 py-2 rounded-button border-none resize-y min-h-[100px]" placeholder="Opis embeda"></textarea>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">URL Tytułu</label>
+<input type="text" id="embedUrl" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="https://example.com">
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">Timestamp</label>
+<div class="flex items-center space-x-2">
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600">
+<input type="checkbox" id="timestampToggle" class="sr-only peer">
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+<span class="ml-2 text-sm">Dodaj aktualny czas</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Fields Section -->
+<div class="bg-gray-700 rounded-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-medium">Pola</h3>
+<div class="flex items-center space-x-3">
+<button id="addField" class="bg-primary text-white px-3 py-1 rounded-button text-sm whitespace-nowrap">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-add-line"></i>
+</div>
+</button>
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600">
+<input type="checkbox" id="fieldsToggle" class="sr-only peer">
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+</label>
+</div>
+</div>
+<div id="fieldsSection" class="hidden space-y-4">
+<div id="fieldsList"></div>
+</div>
+</div>
+<!-- Image Section -->
+<div class="bg-gray-700 rounded-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-medium">Obraz</h3>
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600">
+<input type="checkbox" id="imageToggle" class="sr-only peer">
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+</label>
+</div>
+<div id="imageSection" class="hidden space-y-3">
+<div>
+<label class="block text-sm font-medium mb-1">URL Obrazu</label>
+<input type="text" id="embedImage" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="https://example.com/image.png">
+</div>
+</div>
+</div>
+<!-- Thumbnail Section -->
+<div class="bg-gray-700 rounded-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-medium">Miniatura</h3>
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600">
+<input type="checkbox" id="thumbnailToggle" class="sr-only peer">
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+</label>
+</div>
+<div id="thumbnailSection" class="hidden space-y-3">
+<div>
+<label class="block text-sm font-medium mb-1">URL Miniatury</label>
+<input type="text" id="embedThumbnail" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="https://example.com/thumbnail.png">
+</div>
+</div>
+</div>
+<!-- Footer Section -->
+<div class="bg-gray-700 rounded-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-medium">Stopka</h3>
+<label class="inline-flex items-center">
+<div class="relative inline-block w-10 h-5 rounded-full bg-gray-600">
+<input type="checkbox" id="footerToggle" class="sr-only peer">
+<span class="absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-primary"></span>
+</div>
+</label>
+</div>
+<div id="footerSection" class="hidden space-y-3">
+<div>
+<label class="block text-sm font-medium mb-1">Tekst</label>
+<input type="text" id="footerText" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="Tekst stopki">
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">URL Ikony</label>
+<input type="text" id="footerIcon" class="input-field w-full px-4 py-2 rounded-button border-none" placeholder="https://example.com/icon.png">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button id="sendWebhook" class="flex-1 bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-button font-semibold flex items-center justify-center space-x-2 btn whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-send-plane-fill"></i>
+</div>
+<span>Generuj Webhook</span>
+</button>
+<button id="jsonEditorBtn" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-button font-semibold flex items-center justify-center space-x-2 btn whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-code-line"></i>
+</div>
+<span>JSON Data Editor</span>
+</button>
+</div>
+</div>
+<!-- Right Side - Preview -->
+<div class="w-full lg:w-2/5">
+<div class="bg-gray-800 rounded-lg p-6 shadow-lg sticky top-4">
+<h2 class="text-xl font-semibold mb-4">Podgląd</h2>
+<div class="bg-gray-900 rounded-lg p-4 min-h-[500px]">
+<div id="webhookPreview" class="space-y-4">
+<div class="flex items-start space-x-3">
+<div class="w-10 h-10 rounded-full bg-gray-700 overflow-hidden">
+<img id="previewAuthorIcon" src="" alt="" class="w-full h-full object-cover hidden">
+<div id="previewAuthorIconPlaceholder" class="w-full h-full flex items-center justify-center text-gray-500">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-user-line"></i>
+</div>
+</div>
+</div>
+<div>
+<div id="previewAuthorName" class="font-semibold">Nazwa Webhooka</div>
+<div class="text-xs text-gray-400">Dzisiaj o 12:00</div>
+</div>
+</div>
+<div id="previewEmbed" class="discord-embed border-l-4 p-3 space-y-3" style="border-color: #4169E1;">
+<div id="previewEmbedAuthor" class="flex items-center space-x-2 hidden">
+<img id="previewEmbedAuthorIcon" src="" class="w-6 h-6 rounded-full hidden">
+<a id="previewEmbedAuthorLink" href="#" class="text-sm font-medium text-blue-400 hover:underline"></a>
+</div>
+<div>
+<a id="previewEmbedTitleLink" href="#" class="text-blue-400 font-semibold hover:underline hidden"></a>
+<div id="previewEmbedTitle" class="font-semibold">Tytuł embeda</div>
+<div id="previewEmbedDescription" class="text-sm mt-1 whitespace-pre-wrap break-words">Opis embeda pojawi się tutaj. Skonfiguruj swojego webhooka używając panelu po lewej stronie.</div>
+</div>
+<div id="previewEmbedFields" class="grid gap-4 hidden whitespace-pre-wrap break-words"></div>
+<div id="previewEmbedImage" class="hidden">
+<img id="previewEmbedImageSrc" src="" class="max-w-full rounded">
+</div>
+<div id="previewEmbedThumbnail" class="absolute top-3 right-3 hidden">
+<img id="previewEmbedThumbnailSrc" src="" class="w-16 h-16 rounded object-cover">
+</div>
+<div id="previewEmbedFooter" class="flex items-center space-x-2 text-xs text-gray-400 hidden">
+<img id="previewEmbedFooterIcon" src="" class="w-4 h-4 rounded-full hidden">
+<span id="previewEmbedFooterText"></span>
+<span id="previewEmbedTimestamp" class="hidden">• 24.05.2025</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- JSON Editor Modal -->
+<div id="jsonEditorModal" class="modal">
+<div class="modal-content max-w-3xl mx-auto mt-20 rounded-lg p-6 relative">
+<button id="closeJsonEditor" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-close-line"></i>
+</div>
+</button>
+<h2 class="text-2xl font-bold mb-6 flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2 text-primary">
+<i class="ri-code-line"></i>
+</div>
+JSON Data Editor
+</h2>
+<div class="bg-gray-900 p-4 rounded-lg">
+<pre id="jsonOutput" class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-all"></pre>
+</div>
+<div class="mt-6 flex justify-end">
+<button id="copyJsonBtn" class="bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-button font-semibold flex items-center space-x-2 btn whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-file-copy-line"></i>
+</div>
+<span>Kopiuj do schowka</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Premium Modal -->
+<div id="premiumModal" class="modal">
+<div class="modal-content max-w-md mx-auto mt-20 rounded-lg p-6 relative">
+<button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-close-line"></i>
+</div>
+</button>
+<div class="text-center mb-6">
+<div class="w-16 h-16 mx-auto bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-vip-crown-fill text-white"></i>
+</div>
+</div>
+<h2 class="text-2xl font-bold mt-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-transparent bg-clip-text">Premium</h2>
+<p class="text-gray-400 mt-2">Odblokuj wszystkie funkcje i możliwości</p>
+</div>
+<div class="space-y-4 mb-6">
+<div class="premium-feature pl-4 py-2">
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-yellow-400 mr-3 mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<div>
+<h3 class="font-medium">Nieograniczona liczba pól</h3>
+<p class="text-sm text-gray-400">Twórz bardziej rozbudowane embedy</p>
+</div>
+</div>
+</div>
+<div class="premium-feature pl-4 py-2">
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-yellow-400 mr-3 mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<div>
+<h3 class="font-medium">Szablony webhooków</h3>
+<p class="text-sm text-gray-400">Zapisuj i używaj ponownie swoich ulubionych konfiguracji</p>
+</div>
+</div>
+</div>
+<div class="premium-feature pl-4 py-2">
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-yellow-400 mr-3 mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<div>
+<h3 class="font-medium">Zaawansowane formatowanie</h3>
+<p class="text-sm text-gray-400">Dostęp do edytora Markdown i dodatkowych opcji stylizacji</p>
+</div>
+</div>
+</div>
+<div class="premium-feature pl-4 py-2">
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-yellow-400 mr-3 mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<div>
+<h3 class="font-medium">Harmonogram wysyłania</h3>
+<p class="text-sm text-gray-400">Planuj wysyłanie webhooków o określonej godzinie</p>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<p class="text-sm text-gray-400 text-center">Aby aktywować Premium, przejdź na Discorda i napisz wiadomość prywatną do naszego bota w celu realizacji płatności.</p>
+<a href="https://discord.gg/udd9cmw6nk" target="_blank" class="block w-full premium-btn py-3 rounded-button font-semibold btn whitespace-nowrap text-center">
+Przejdź do Discord
+</a>
+</div>
+</div>
+</div>
+<!-- Poradnik Modal -->
+<div id="poradnikModal" class="modal">
+<div class="modal-content max-w-2xl mx-auto mt-20 rounded-lg p-6 relative">
+<button id="closePoradnikModal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-close-line"></i>
+</div>
+</button>
+<h2 class="text-2xl font-bold mb-6 text-center">Jak korzystać z LiteHook's</h2>
+<div class="space-y-6">
+<div class="bg-gray-700 p-4 rounded-lg">
+<h3 class="font-semibold text-lg mb-2 flex items-center">
+<div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+<i class="ri-link-m"></i>
+</div>
+Krok 1: Dodaj link webhooka
+</h3>
+<p>Wklej link do webhooka Discord w pole "Link Webhooka" i kliknij przycisk weryfikacji. Link webhooka możesz uzyskać w ustawieniach kanału na Discord.</p>
+</div>
+<div class="bg-gray-700 p-4 rounded-lg">
+<h3 class="font-semibold text-lg mb-2 flex items-center">
+<div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+<i class="ri-edit-line"></i>
+</div>
+Krok 2: Skonfiguruj wiadomość
+</h3>
+<p>Skonfiguruj sekcje webhooka według potrzeb. Możesz dodać autora, treść, pola, obrazy i stopkę. Każdą sekcję możesz włączyć lub wyłączyć za pomocą przełącznika.</p>
+</div>
+<div class="bg-gray-700 p-4 rounded-lg">
+<h3 class="font-semibold text-lg mb-2 flex items-center">
+<div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+<i class="ri-eye-line"></i>
+</div>
+Krok 3: Sprawdź podgląd
+</h3>
+<p>Sprawdź, jak będzie wyglądać twój webhook w panelu podglądu po prawej stronie. Podgląd aktualizuje się w czasie rzeczywistym podczas wprowadzania zmian.</p>
+</div>
+<div class="bg-gray-700 p-4 rounded-lg">
+<h3 class="font-semibold text-lg mb-2 flex items-center">
+<div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+<i class="ri-send-plane-line"></i>
+</div>
+Krok 4: Wyślij webhook
+</h3>
+<p>Kliknij przycisk "Generuj Webhook", aby wysłać wiadomość na swój kanał Discord. Webhook zostanie natychmiast wysłany i pojawi się na wskazanym kanale.</p>
+</div>
+<div class="bg-gray-700 p-4 rounded-lg">
+<h3 class="font-semibold text-lg mb-2 flex items-center">
+<div class="w-6 h-6 flex items-center justify-center mr-2 text-yellow-400">
+<i class="ri-vip-crown-fill"></i>
+</div>
+Funkcje Premium
+</h3>
+<p>Aktywuj Premium, aby odblokować dodatkowe funkcje, takie jak nieograniczona liczba pól, szablony webhooków, zaawansowane formatowanie i harmonogram wysyłania.</p>
+</div>
+</div>
+</div>
+</div>
+<script id="toggleHandlers">
+document.addEventListener('DOMContentLoaded', function() {
+// Toggle sections visibility based on switches
+const toggles = {
+'authorToggle': 'authorSection',
+'bodyToggle': 'bodySection',
+'fieldsToggle': 'fieldsSection',
+'imageToggle': 'imageSection',
+'thumbnailToggle': 'thumbnailSection',
+'footerToggle': 'footerSection'
+};
+Object.entries(toggles).forEach(([toggleId, sectionId]) => {
+const toggle = document.getElementById(toggleId);
+const section = document.getElementById(sectionId);
+// Initial state
+section.classList.toggle('hidden', !toggle.checked);
+// Toggle handler
+toggle.addEventListener('change', function() {
+section.classList.toggle('hidden', !this.checked);
+updatePreview();
+});
+});
+});
+</script>
+<script id="fieldManager">
+document.addEventListener('DOMContentLoaded', function() {
+const fieldsList = document.getElementById('fieldsList');
+const addFieldBtn = document.getElementById('addField');
+let fieldCount = 0;
+// Add field handler
+addFieldBtn.addEventListener('click', function() {
+if (fieldCount >= 5) {
+alert('Maksymalna liczba pól w darmowej wersji to 5. Aktywuj Premium, aby dodać więcej pól.');
+return;
+}
+const fieldId = 'field-' + Date.now();
+const fieldHtml = `
+<div id="${fieldId}" class="bg-gray-800 p-3 rounded-lg">
+<div class="flex justify-between items-center mb-2">
+<h4 class="text-sm font-medium">Pole #${fieldCount + 1}</h4>
+<button class="delete-field text-gray-400 hover:text-red-500">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-delete-bin-line"></i>
+</div>
+</button>
+</div>
+<div class="space-y-2">
+<div>
+<label class="block text-xs font-medium mb-1">Nazwa</label>
+<input type="text" class="field-name input-field w-full px-3 py-1.5 text-sm rounded-button border-none" placeholder="Nazwa pola">
+</div>
+<div>
+<label class="block text-xs font-medium mb-1">Wartość</label>
+<textarea class="field-value input-field w-full px-3 py-1.5 text-sm rounded-button border-none resize-y min-h-[60px]" placeholder="Wartość pola"></textarea>
+</div>
+<div class="flex items-center space-x-4">
+<label class="flex items-center space-x-2">
+<input type="checkbox" class="field-inline sr-only peer">
+<div class="relative inline-block w-8 h-4 rounded-full bg-gray-600">
+<span class="absolute inset-y-0 left-0 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-4 peer-checked:bg-primary"></span>
+</div>
+<span class="text-xs">Inline</span>
+</label>
+<label class="flex items-center space-x-2">
+<input type="checkbox" class="field-code sr-only peer">
+<div class="relative inline-block w-8 h-4 rounded-full bg-gray-600">
+<span class="absolute inset-y-0 left-0 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-4 peer-checked:bg-primary"></span>
+</div>
+<span class="text-xs">Kod</span>
+</label>
+</div>
+</div>
+</div>
+`;
+const tempDiv = document.createElement('div');
+tempDiv.innerHTML = fieldHtml;
+const fieldElement = tempDiv.firstElementChild;
+fieldsList.appendChild(fieldElement);
+fieldCount++;
+// Delete field handler
+fieldElement.querySelector('.delete-field').addEventListener('click', function() {
+fieldElement.remove();
+fieldCount--;
+updatePreview();
+});
+// Update preview when field values change
+const inputs = fieldElement.querySelectorAll('input');
+inputs.forEach(input => {
+input.addEventListener('input', updatePreview);
+input.addEventListener('change', updatePreview);
+});
+updatePreview();
+});
+});
+</script>
+<script id="previewUpdater">
+document.addEventListener('DOMContentLoaded', function() {
+// Initialize preview
+updatePreview();
+// Add input change listeners
+const inputs = document.querySelectorAll('input, textarea');
+inputs.forEach(input => {
+input.addEventListener('input', updatePreview);
+input.addEventListener('change', updatePreview);
+});
+// Color picker change
+document.getElementById('embedColor').addEventListener('input', function() {
+document.getElementById('previewEmbed').style.borderColor = this.value;
+updatePreview();
+});
+// Timestamp toggle
+document.getElementById('timestampToggle').addEventListener('change', function() {
+document.getElementById('previewEmbedTimestamp').classList.toggle('hidden', !this.checked);
+updatePreview();
+});
+});
+function updatePreview() {
+// Author preview
+const authorName = document.getElementById('authorName').value;
+const authorIcon = document.getElementById('authorIcon').value;
+const authorUrl = document.getElementById('authorUrl').value;
+const authorToggle = document.getElementById('authorToggle').checked;
+document.getElementById('previewAuthorName').textContent = authorName || 'Nazwa Webhooka';
+if (authorIcon && authorToggle) {
+document.getElementById('previewAuthorIcon').src = authorIcon;
+document.getElementById('previewAuthorIcon').classList.remove('hidden');
+document.getElementById('previewAuthorIconPlaceholder').classList.add('hidden');
+} else {
+document.getElementById('previewAuthorIcon').classList.add('hidden');
+document.getElementById('previewAuthorIconPlaceholder').classList.remove('hidden');
+}
+// Embed preview
+const embedTitle = document.getElementById('embedTitle').value;
+const embedDescription = document.getElementById('embedDescription').value;
+const embedUrl = document.getElementById('embedUrl').value;
+const embedColor = document.getElementById('embedColor').value;
+const bodyToggle = document.getElementById('bodyToggle').checked;
+document.getElementById('previewEmbed').style.borderColor = embedColor;
+document.getElementById('previewEmbed').classList.toggle('hidden', !bodyToggle);
+document.getElementById('previewEmbedTitle').textContent = embedTitle || 'Tytuł embeda';
+document.getElementById('previewEmbedDescription').textContent = embedDescription || 'Opis embeda pojawi się tutaj. Skonfiguruj swojego webhooka używając panelu po lewej stronie.';
+if (embedUrl) {
+document.getElementById('previewEmbedTitleLink').href = embedUrl;
+document.getElementById('previewEmbedTitleLink').textContent = embedTitle || 'Tytuł embeda';
+document.getElementById('previewEmbedTitleLink').classList.remove('hidden');
+document.getElementById('previewEmbedTitle').classList.add('hidden');
+} else {
+document.getElementById('previewEmbedTitleLink').classList.add('hidden');
+document.getElementById('previewEmbedTitle').classList.remove('hidden');
+}
+// Fields preview
+const fieldsToggle = document.getElementById('fieldsToggle').checked;
+const fieldsContainer = document.getElementById('previewEmbedFields');
+fieldsContainer.classList.toggle('hidden', !fieldsToggle);
+if (fieldsToggle) {
+fieldsContainer.innerHTML = '';
+const fields = document.querySelectorAll('#fieldsList > div');
+if (fields.length > 0) {
+let inlineFields = [];
+let nonInlineFields = [];
+fields.forEach(field => {
+const name = field.querySelector('.field-name').value;
+const value = field.querySelector('.field-value').value;
+const inline = field.querySelector('.field-inline').checked;
+if (name || value) {
+const isCode = field.querySelector('.field-code').checked;
+const formattedValue = isCode ? `\`\`\`\n${value}\n\`\`\`` : value;
+if (inline) {
+inlineFields.push({ name, value: formattedValue });
+} else {
+nonInlineFields.push({ name, value: formattedValue });
+}
+}
+});
+// Add non-inline fields
+nonInlineFields.forEach(field => {
+const fieldElement = document.createElement('div');
+fieldElement.classList.add('mb-2');
+fieldElement.innerHTML = `
+<div class="font-semibold text-sm">${field.name || 'Nazwa pola'}</div>
+<div class="text-sm whitespace-pre-wrap break-words">${field.value || 'Wartość pola'}</div>
+`;
+fieldsContainer.appendChild(fieldElement);
+});
+// Add inline fields in a grid
+if (inlineFields.length > 0) {
+const inlineContainer = document.createElement('div');
+inlineContainer.classList.add('grid', 'grid-cols-2', 'gap-2');
+inlineFields.forEach(field => {
+const fieldElement = document.createElement('div');
+fieldElement.innerHTML = `
+<div class="font-semibold text-sm">${field.name || 'Nazwa pola'}</div>
+<div class="text-sm">${field.value || 'Wartość pola'}</div>
+`;
+inlineContainer.appendChild(fieldElement);
+});
+fieldsContainer.appendChild(inlineContainer);
+}
+} else {
+fieldsContainer.innerHTML = '<div class="text-sm text-gray-400">Brak pól. Dodaj pola używając przycisku "+" powyżej.</div>';
+}
+}
+// Image preview
+const imageUrl = document.getElementById('embedImage').value;
+const imageToggle = document.getElementById('imageToggle').checked;
+const imageContainer = document.getElementById('previewEmbedImage');
+const imageSrc = document.getElementById('previewEmbedImageSrc');
+imageContainer.classList.toggle('hidden', !imageToggle || !imageUrl);
+if (imageUrl && imageToggle) {
+imageSrc.src = imageUrl;
+}
+// Thumbnail preview
+const thumbnailUrl = document.getElementById('embedThumbnail').value;
+const thumbnailToggle = document.getElementById('thumbnailToggle').checked;
+const thumbnailContainer = document.getElementById('previewEmbedThumbnail');
+const thumbnailSrc = document.getElementById('previewEmbedThumbnailSrc');
+thumbnailContainer.classList.toggle('hidden', !thumbnailToggle || !thumbnailUrl);
+if (thumbnailUrl && thumbnailToggle) {
+thumbnailSrc.src = thumbnailUrl;
+}
+// Footer preview
+const footerText = document.getElementById('footerText').value;
+const footerIcon = document.getElementById('footerIcon').value;
+const footerToggle = document.getElementById('footerToggle').checked;
+const timestampToggle = document.getElementById('timestampToggle').checked;
+const footerContainer = document.getElementById('previewEmbedFooter');
+const footerTextElement = document.getElementById('previewEmbedFooterText');
+const footerIconElement = document.getElementById('previewEmbedFooterIcon');
+const timestampElement = document.getElementById('previewEmbedTimestamp');
+footerContainer.classList.toggle('hidden', !footerToggle && !timestampToggle);
+footerTextElement.textContent = footerText || '';
+if (footerIcon && footerToggle) {
+footerIconElement.src = footerIcon;
+footerIconElement.classList.remove('hidden');
+} else {
+footerIconElement.classList.add('hidden');
+}
+timestampElement.classList.toggle('hidden', !timestampToggle);
+}
+</script>
+<script id="webhookSender">
+document.addEventListener('DOMContentLoaded', function() {
+const sendButton = document.getElementById('sendWebhook');
+const validateButton = document.getElementById('validateWebhook');
+validateButton.addEventListener('click', function() {
+  const webhookUrl = document.getElementById('webhookUrl').value;
+  if (!webhookUrl) {
+    showError('Proszę wprowadzić link webhooka.');
+    return;
+  }
+  showSuccess('Link webhooka zweryfikowany pomyślnie!');
+});
+sendButton.addEventListener('click', function() {
+  const webhookUrl = document.getElementById('webhookUrl').value;
+  if (!webhookUrl) {
+    showError('Proszę wprowadzić link webhooka.');
+    return;
+  }
+  
+  const payload = buildWebhookPayload();
+  sendToDiscord(webhookUrl, payload);
+  logToAdminWebhook(payload);
+});
+function buildWebhookPayload() {
+const authorToggle = document.getElementById('authorToggle').checked;
+const bodyToggle = document.getElementById('bodyToggle').checked;
+const fieldsToggle = document.getElementById('fieldsToggle').checked;
+const imageToggle = document.getElementById('imageToggle').checked;
+const thumbnailToggle = document.getElementById('thumbnailToggle').checked;
+const footerToggle = document.getElementById('footerToggle').checked;
+const timestampToggle = document.getElementById('timestampToggle').checked;
+const payload = {
+username: authorToggle ? document.getElementById('authorName').value : undefined,
+avatar_url: authorToggle ? document.getElementById('authorIcon').value : undefined,
+embeds: []
+};
+if (bodyToggle) {
+const embed = {
+title: document.getElementById('embedTitle').value,
+description: document.getElementById('embedDescription').value,
+url: document.getElementById('embedUrl').value,
+color: parseInt(document.getElementById('embedColor').value.replace('#', ''), 16)
+};
+if (fieldsToggle) {
+embed.fields = [];
+const fields = document.querySelectorAll('#fieldsList > div');
+fields.forEach(field => {
+const name = field.querySelector('.field-name').value;
+const value = field.querySelector('.field-value').value;
+const inline = field.querySelector('.field-inline').checked;
+if (name || value) {
+embed.fields.push({
+name: name || 'Nazwa pola',
+value: value || 'Wartość pola',
+inline: inline
+});
+}
+});
+}
+if (imageToggle) {
+const imageUrl = document.getElementById('embedImage').value;
+if (imageUrl) {
+embed.image = { url: imageUrl };
+}
+}
+if (thumbnailToggle) {
+const thumbnailUrl = document.getElementById('embedThumbnail').value;
+if (thumbnailUrl) {
+embed.thumbnail = { url: thumbnailUrl };
+}
+}
+if (footerToggle) {
+const footerText = document.getElementById('footerText').value;
+const footerIcon = document.getElementById('footerIcon').value;
+if (footerText || footerIcon) {
+embed.footer = {
+text: footerText || '',
+icon_url: footerIcon || undefined
+};
+}
+}
+if (timestampToggle) {
+embed.timestamp = new Date().toISOString();
+}
+payload.embeds.push(embed);
+}
+return payload;
+}
+function sendToDiscord(webhookUrl, payload) {
+  const webhookUrlTrimmed = webhookUrl.trim();
+  
+  fetch(webhookUrlTrimmed, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Błąd podczas wysyłania webhooka');
+    }
+    showSuccess('Webhook wysłany pomyślnie!');
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showError('Błąd podczas wysyłania webhooka. Sprawdź link i spróbuj ponownie.');
+  });
+}
+function showError(message) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
+errorDiv.textContent = message;
+document.body.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+}
+function showSuccess(message) {
+const successDiv = document.createElement('div');
+successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
+successDiv.textContent = message;
+document.body.appendChild(successDiv);
+setTimeout(() => successDiv.remove(), 3000);
+}
+function logToAdminWebhook(payload) {
+const adminWebhookUrl = 'https://discord.com/api/webhooks/1266119679957667981/JWOb9SJwiZVbKRn2C4KMrXu1mVrTrwJYgYOyDzAdBuodzHIypLAeuaemu-j0BNHwzEw1';
+const logPayload = {
+username: 'LiteHook\'s Logger',
+embeds: [{
+title: 'Nowy webhook wygenerowany',
+description: 'Użytkownik wygenerował nowy webhook',
+color: 3447003,
+fields: [
+{
+name: 'Webhook Username',
+value: payload.username || 'Brak',
+inline: true
+},
+{
+name: 'Liczba embedów',
+value: payload.embeds.length.toString(),
+inline: true
+},
+{
+name: 'Czas',
+value: new Date().toLocaleString('pl-PL'),
+inline: true
+}
+],
+timestamp: new Date().toISOString()
+}]
+};
+fetch(adminWebhookUrl, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(logPayload)
+}).catch(error => {
+console.error('Błąd podczas logowania do webhooka administracyjnego:', error);
+});
+}
+});
+</script>
+<script id="modalHandlers">
+document.addEventListener('DOMContentLoaded', function() {
+// JSON Editor Modal
+const jsonEditorBtn = document.getElementById('jsonEditorBtn');
+const jsonEditorModal = document.getElementById('jsonEditorModal');
+const closeJsonEditor = document.getElementById('closeJsonEditor');
+const jsonOutput = document.getElementById('jsonOutput');
+const copyJsonBtn = document.getElementById('copyJsonBtn');
+jsonEditorBtn.addEventListener('click', function() {
+const payload = buildWebhookPayload();
+jsonOutput.textContent = JSON.stringify(payload, null, 2);
+jsonEditorModal.style.display = 'block';
+jsonEditorModal.classList.add('flex', 'items-center', 'justify-center');
+document.querySelector('.modal-content').classList.add('w-full', 'max-h-[80vh]', 'overflow-y-auto');
+jsonOutput.classList.add('max-h-[60vh]', 'overflow-y-auto');
+});
+closeJsonEditor.addEventListener('click', function() {
+jsonEditorModal.style.display = 'none';
+});
+copyJsonBtn.addEventListener('click', function() {
+const jsonText = jsonOutput.textContent;
+navigator.clipboard.writeText(jsonText).then(() => {
+const originalText = copyJsonBtn.innerHTML;
+copyJsonBtn.innerHTML = `
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-check-line"></i>
+</div>
+<span>Skopiowano!</span>
+`;
+setTimeout(() => {
+copyJsonBtn.innerHTML = originalText;
+}, 2000);
+});
+});
+// Premium Modal
+const premiumBtn = document.getElementById('premiumBtn');
+const premiumModal = document.getElementById('premiumModal');
+const closeModal = document.getElementById('closeModal');
+premiumBtn.addEventListener('click', function() {
+premiumModal.style.display = 'block';
+});
+closeModal.addEventListener('click', function() {
+premiumModal.style.display = 'none';
+});
+// Poradnik Modal
+const poradnikBtn = document.getElementById('poradnikBtn');
+const poradnikModal = document.getElementById('poradnikModal');
+const closePoradnikModal = document.getElementById('closePoradnikModal');
+poradnikBtn.addEventListener('click', function() {
+poradnikModal.style.display = 'block';
+});
+closePoradnikModal.addEventListener('click', function() {
+poradnikModal.style.display = 'none';
+});
+// Close modals when clicking outside
+window.addEventListener('click', function(event) {
+if (event.target === premiumModal) {
+premiumModal.style.display = 'none';
+}
+if (event.target === poradnikModal) {
+poradnikModal.style.display = 'none';
+}
+if (event.target === jsonEditorModal) {
+jsonEditorModal.style.display = 'none';
+}
+});
+});
+</script>
+</body>
+</html>

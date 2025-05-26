@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiteCode - Profesjonalne wsparcie dla twojego projektu</title>
+<style>
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(10, 10, 22, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  transition: opacity 0.3s ease-out;
+}
+.wheel-and-hamster {
+  --dur: 1s;
+  position: relative;
+  width: 12em;
+  height: 12em;
+  font-size: 14px;
+}
+.wheel,
+.hamster,
+.hamster div,
+.spoke {
+  position: absolute;
+}
+.wheel,
+.spoke {
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.wheel {
+  background: radial-gradient(100% 100% at center,hsla(0,0%,60%,0) 47.8%,hsl(0,0%,100%,0.1) 48%);
+  z-index: 2;
+}
+.hamster {
+  animation: hamster var(--dur) ease-in-out infinite;
+  top: 50%;
+  left: calc(50% - 3em);
+  width: 6em;
+  height: 3.75em;
+  transform: rotate(4deg) translate(-0.8em,1.85em);
+  transform-origin: 50% 0;
+  z-index: 1;
+}
+.hamster__head {
+  animation: hamsterHead var(--dur) ease-in-out infinite;
+  background: hsl(30,90%,55%);
+  border-radius: 70% 30% 0 100% / 40% 25% 25% 60%;
+  box-shadow: 0 -0.25em 0 hsl(30,90%,80%) inset,
+    0.75em -1.55em 0 hsl(30,90%,90%) inset;
+  top: 0;
+  left: -2em;
+  width: 2.75em;
+  height: 2.5em;
+  transform-origin: 100% 50%;
+}
+.hamster__ear {
+  animation: hamsterEar var(--dur) ease-in-out infinite;
+  background: hsl(0,90%,85%);
+  border-radius: 50%;
+  box-shadow: -0.25em 0 hsl(30,90%,55%) inset;
+  top: -0.25em;
+  right: -0.25em;
+  width: 0.75em;
+  height: 0.75em;
+  transform-origin: 50% 75%;
+}
+.hamster__eye {
+  animation: hamsterEye var(--dur) linear infinite;
+  background-color: hsl(0,0%,0%);
+  border-radius: 50%;
+  top: 0.375em;
+  left: 1.25em;
+  width: 0.5em;
+  height: 0.5em;
+}
+.hamster__nose {
+  background: hsl(0,90%,75%);
+  border-radius: 35% 65% 85% 15% / 70% 50% 50% 30%;
+  top: 0.75em;
+  left: 0;
+  width: 0.2em;
+  height: 0.25em;
+}
+.hamster__body {
+  animation: hamsterBody var(--dur) ease-in-out infinite;
+  background: hsl(30,90%,90%);
+  border-radius: 50% 30% 50% 30% / 15% 60% 40% 40%;
+  box-shadow: 0.1em 0.75em 0 hsl(30,90%,55%) inset,
+    0.15em -0.5em 0 hsl(30,90%,80%) inset;
+  top: 0.25em;
+  left: 2em;
+  width: 4.5em;
+  height: 3em;
+  transform-origin: 17% 50%;
+  transform-style: preserve-3d;
+}
+.hamster__limb--fr,
+.hamster__limb--fl {
+  clip-path: polygon(0 0,100% 0,70% 80%,60% 100%,0% 100%,40% 80%);
+  top: 2em;
+  left: 0.5em;
+  width: 1em;
+  height: 1.5em;
+  transform-origin: 50% 0;
+}
+.hamster__limb--fr {
+  animation: hamsterFRLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,80%) 80%,hsl(0,90%,75%) 80%);
+  transform: rotate(15deg) translateZ(-1px);
+}
+.hamster__limb--fl {
+  animation: hamsterFLLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,90%) 80%,hsl(0,90%,85%) 80%);
+  transform: rotate(15deg);
+}
+.hamster__limb--br,
+.hamster__limb--bl {
+  border-radius: 0.75em 0.75em 0 0;
+  clip-path: polygon(0 0,100% 0,100% 30%,70% 90%,70% 100%,30% 100%,40% 90%,0% 30%);
+  top: 1em;
+  left: 2.8em;
+  width: 1.5em;
+  height: 2.5em;
+  transform-origin: 50% 30%;
+}
+.hamster__limb--br {
+  animation: hamsterBRLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,80%) 90%,hsl(0,90%,75%) 90%);
+  transform: rotate(-25deg) translateZ(-1px);
+}
+.hamster__limb--bl {
+  animation: hamsterBLLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,90%) 90%,hsl(0,90%,85%) 90%);
+  transform: rotate(-25deg);
+}
+.hamster__tail {
+  animation: hamsterTail var(--dur) linear infinite;
+  background: hsl(0,90%,85%);
+  border-radius: 0.25em 50% 50% 0.25em;
+  box-shadow: 0 -0.2em 0 hsl(0,90%,75%) inset;
+  top: 1.5em;
+  right: -0.5em;
+  width: 1em;
+  height: 0.5em;
+  transform: rotate(30deg) translateZ(-1px);
+  transform-origin: 0.25em 0.25em;
+}
+.spoke {
+  animation: spoke var(--dur) linear infinite;
+  background: radial-gradient(100% 100% at center,hsl(0,0%,60%) 4.8%,hsla(0,0%,60%,0) 5%),
+    linear-gradient(hsla(0,0%,55%,0) 46.9%,hsl(0,0%,65%) 47% 52.9%,hsla(0,0%,65%,0) 53%) 50% 50% / 99% 99% no-repeat;
+}
+@keyframes hamster {
+  from, to {
+    transform: rotate(4deg) translate(-0.8em,1.85em);
+  }
+  50% {
+    transform: rotate(0) translate(-0.8em,1.85em);
+  }
+}
+@keyframes hamsterHead {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(0);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes hamsterEye {
+  from, 90%, to {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0);
+  }
+}
+@keyframes hamsterEar {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(0);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(12deg);
+  }
+}
+@keyframes hamsterBody {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(0);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes hamsterFRLimb {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(50deg) translateZ(-1px);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(-30deg) translateZ(-1px);
+  }
+}
+@keyframes hamsterFLLimb {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(-30deg);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(50deg);
+  }
+}
+@keyframes hamsterBRLimb {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(-60deg) translateZ(-1px);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(20deg) translateZ(-1px);
+  }
+}
+@keyframes hamsterBLLimb {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(20deg);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(-60deg);
+  }
+}
+@keyframes hamsterTail {
+  from, 25%, 50%, 75%, to {
+    transform: rotate(30deg) translateZ(-1px);
+  }
+  12.5%, 37.5%, 62.5%, 87.5% {
+    transform: rotate(10deg) translateZ(-1px);
+  }
+}
+@keyframes spoke {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(-1turn);
+  }
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3498db',secondary:'#2980b9'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+@keyframes twinkle {
+0% { opacity: 0.3; }
+50% { opacity: 1; }
+100% { opacity: 0.3; }
+}
+.star {
+position: absolute;
+background-color: white;
+border-radius: 50%;
+animation: twinkle 3s infinite;
+}
+.star:nth-child(odd) {
+background-color: rgba(52, 152, 219, 0.8);
+}
+.line {
+position: absolute;
+border: 1px solid rgba(52, 152, 219, 0.1);
+border-radius: 100%;
+}
+</style>
+</head>
+<body class="bg-[#0a0a16] min-h-screen text-white overflow-x-hidden">
+<div class="loader-container" id="loader">
+  <div class="wheel-and-hamster" aria-label="Orange and tan hamster running in a metal wheel">
+    <div class="wheel"></div>
+    <div class="hamster">
+      <div class="hamster__body">
+        <div class="hamster__head">
+          <div class="hamster__ear"></div>
+          <div class="hamster__eye"></div>
+          <div class="hamster__nose"></div>
+        </div>
+        <div class="hamster__limb hamster__limb--fr"></div>
+        <div class="hamster__limb hamster__limb--fl"></div>
+        <div class="hamster__limb hamster__limb--br"></div>
+        <div class="hamster__limb hamster__limb--bl"></div>
+        <div class="hamster__tail"></div>
+      </div>
+    </div>
+    <div class="spoke"></div>
+  </div>
+</div>
+<!-- Background Elements -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none">
+<div class="star w-1 h-1 top-[10%] left-[5%]" style="animation-delay: 0.5s;"></div>
+<div class="star w-2 h-2 top-[15%] left-[15%]" style="animation-delay: 1.5s;"></div>
+<div class="star w-1 h-1 top-[25%] left-[25%]" style="animation-delay: 2.5s;"></div>
+<div class="star w-1 h-1 top-[8%] left-[35%]" style="animation-delay: 1s;"></div>
+<div class="star w-2 h-2 top-[20%] left-[45%]" style="animation-delay: 0s;"></div>
+<div class="star w-1 h-1 top-[30%] left-[55%]" style="animation-delay: 2s;"></div>
+<div class="star w-1 h-1 top-[12%] left-[65%]" style="animation-delay: 1.2s;"></div>
+<div class="star w-2 h-2 top-[18%] left-[75%]" style="animation-delay: 0.7s;"></div>
+<div class="star w-1 h-1 top-[28%] left-[85%]" style="animation-delay: 1.7s;"></div>
+<div class="star w-1 h-1 top-[35%] left-[95%]" style="animation-delay: 2.2s;"></div>
+<div class="star w-1 h-1 top-[50%] left-[10%]" style="animation-delay: 0.3s;"></div>
+<div class="star w-2 h-2 top-[60%] left-[20%]" style="animation-delay: 1.3s;"></div>
+<div class="star w-1 h-1 top-[70%] left-[30%]" style="animation-delay: 2.3s;"></div>
+<div class="star w-1 h-1 top-[55%] left-[40%]" style="animation-delay: 0.8s;"></div>
+<div class="star w-2 h-2 top-[65%] left-[50%]" style="animation-delay: 1.8s;"></div>
+<div class="star w-1 h-1 top-[75%] left-[60%]" style="animation-delay: 2.8s;"></div>
+<div class="star w-1 h-1 top-[52%] left-[70%]" style="animation-delay: 0.2s;"></div>
+<div class="star w-2 h-2 top-[62%] left-[80%]" style="animation-delay: 1.2s;"></div>
+<div class="star w-1 h-1 top-[72%] left-[90%]" style="animation-delay: 2.2s;"></div>
+<div class="line w-[300px] h-[300px] top-[20%] right-[-100px]"></div>
+<div class="line w-[500px] h-[500px] top-[30%] right-[-200px]"></div>
+<div class="line w-[700px] h-[700px] top-[40%] right-[-300px]"></div>
+<div class="line w-[400px] h-[400px] bottom-[-200px] left-[10%]"></div>
+<div class="line w-[600px] h-[600px] bottom-[-300px] left-[20%]"></div>
+</div>
+<!-- Header/Navigation -->
+<header class="w-full py-6 px-8 relative z-10">
+<div class="container mx-auto flex items-center justify-between">
+<a href="#" class="flex items-center gap-3">
+<img src="https://i.imgur.com/p9TtvB3.png" alt="LiteCode Logo" class="h-12">
+<span class="text-2xl font-bold text-white">LiteCode</span>
+</a>
+<nav class="hidden md:flex items-center space-x-8">
+<a href="#" class="text-white hover:text-primary transition-colors">Strona Główna</a>
+<a href="#oferta.html" class="text-gray-400 hover:text-primary transition-colors">Oferta</a>
+<a href="#litehooks.html" class="text-gray-400 hover:text-primary transition-colors">LiteHook's</a>
+<a href="" class="text-gray-400 hover:text-primary transition-colors">Zespół</a>
+</nav>
+<a href="https://discord.com/oauth2/authorize?client_id=1375904230895783986&response_type=code&redirect_uri=https%3A%2F%2Fzxq041.github.io%2Fpanel%2F&scope=identify+guilds" class="btn-class-name py-2 px-6 whitespace-nowrap" style="--color: 52, 152, 219">Panel klienta</a>
+<button class="md:hidden flex items-center justify-center w-10 h-10">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</header>
+<style>
+.btn-class-name {
+border-radius: 1em;
+transition: .3s;
+background-color: rgba(var(--color), .2);
+color: rgb(var(--color));
+fill: rgb(var(--color));
+font-weight: bold;
+font-size: 1.25rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+cursor: pointer;
+border: 2px solid rgb(var(--color));
+box-shadow: 0 0 10px rgba(var(--color), .4);
+padding: 0.75rem 2rem;
+}
+.bar {
+position: relative;
+display: inline-block;
+margin: 0 8px;
+width: 10px;
+height: 50px;
+border-radius: 0px;
+background: #fff;
+box-shadow: 0 4px 10px rgba(47, 47, 47, 0.5);
+animation: wave 1s ease-in-out infinite;
+}
+@keyframes wave {
+0% {
+transform: scaleY(1);
+}
+50% {
+transform: scaleY(0.5);
+}
+100% {
+transform: scaleY(1);
+}
+}
+.btn-class-name:hover {
+box-shadow: 0 0 20px rgba(var(--color), .6);
+transform: translateY(-2px);
+}
+</style>
+<!-- Hero Section -->
+<section class="relative min-h-[80vh] flex items-center justify-center px-4 py-20">
+<div class="container mx-auto text-center max-w-3xl relative z-10">
+<div class="flex justify-center mb-6">
+<div class="bar" style="animation-delay: 0s;"></div>
+<div class="bar" style="animation-delay: 0.2s;"></div>
+<div class="bar" style="animation-delay: 0.4s;"></div>
+<div class="bar" style="animation-delay: 0.6s;"></div>
+<div class="bar" style="animation-delay: 0.8s;"></div>
+</div>
+<h1 class="text-5xl md:text-6xl font-bold mb-4">
+<span class="text-primary">Najlepsi w Polsce</span> 
+</h1>
+<h2 class="text-2xl md:text-3xl font-medium mb-8">Tworzymy specjalnie dla <span class="text-primary">ciebie</span></h2>
+<p class="text-gray-300 text-lg mb-12 max-w-2xl mx-auto">
+Tworzymy innowacyjne interfejsy, zabezpieczenia, discord bot i wiele więcej.
+Nasz zespół zajmuję się <span class="text-primary">automatyzacją twojego projektu</span>, sprawdź już dziś!!
+
+
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-20 px-4 relative">
+<div class="container mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Nasze <span class="text-primary">rozwiązania</span></h2>
+<p class="text-gray-300 max-w-2xl mx-auto">Oferujemy kompleksowe usługi programistyczne dostosowane do potrzeb Twojego biznesu, zapewniając najwyższą jakość i innowacyjne podejście.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Feature 1 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36] hover:border-primary transition-colors">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<i class="ri-code-s-slash-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Tworzenie stron internetowych</h3>
+<p class="text-gray-300">Projektujemy i wdrażamy nowoczesne, responsywne strony internetowe dopasowane do Twoich potrzeb biznesowych.</p>
+</div>
+<!-- Feature 2 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36] hover:border-primary transition-colors">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<i class="ri-shopping-cart-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Sklepy internetowe</h3>
+<p class="text-gray-300">Tworzymy zaawansowane platformy e-commerce z intuicyjnym interfejsem i kompleksowym systemem zarządzania.</p>
+</div>
+<!-- Feature 3 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36] hover:border-primary transition-colors">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<i class="ri-server-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Rozwiązania serwerowe</h3>
+<p class="text-gray-300">Zapewniamy niezawodne usługi hostingowe, konfigurację serwerów i optymalizację wydajności dla Twoich projektów.</p>
+</div>
+<!-- Feature 4 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36] hover:border-primary transition-colors">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<i class="ri-database-2-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Bazy danych</h3>
+<p class="text-gray-300">Projektujemy i implementujemy wydajne struktury baz danych dostosowane do specyfiki Twojego biznesu.</p>
+</div>
+<!-- Feature 5 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36] hover:border-primary transition-colors">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<i class="ri-shield-check-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Bezpieczeństwo IT</h3>
+<p class="text-gray-300">Oferujemy kompleksowe rozwiązania zabezpieczające Twoje systemy i dane przed zagrożeniami internetowymi.</p>
+</div>
+<!-- Feature 6 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36] hover:border-primary transition-colors">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<i class="ri-customer-service-2-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Wsparcie techniczne</h3>
+<p class="text-gray-300">Zapewniamy profesjonalne wsparcie techniczne i konsultacje na każdym etapie realizacji projektu.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Team Section -->
+<section class="py-20 px-4 relative bg-[#080814]">
+<div class="container mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Nasz <span class="text-primary">zespół</span></h2>
+<p class="text-gray-300 max-w-2xl mx-auto">Poznaj ekspertów, którzy stoją za sukcesem LiteCode. Nasz zespół łączy pasję do technologii z wieloletnim doświadczeniem.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Team Member 1 -->
+<div class="bg-[#0f0f24] rounded-lg overflow-hidden group">
+<div class="p-8 text-center">
+<div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+<img src="https://cdn.discordapp.com/avatars/913479364883136532/8dcc988bd16690cb993bf51abf7ed01f?size=1024" alt="zxq0" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-bold mb-2">zxq0</h3>
+<p class="text-primary mb-4">CEO, Lead Developer</p>
+<p class="text-gray-300">Główny założyciel LiteCode, Główny Programista kordynujący przebiegiem wszystkich opercaji i podprojektów LiteCode'a</p>
+=======
+</div>
+</div>
+<!-- Team Member 2 -->
+<div class="bg-[#0f0f24] rounded-lg overflow-hidden group">
+<div class="p-8 text-center">
+<div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+<img src="https://cdn.discordapp.com/avatars/918558941007478794/2b9a9f3460aa8dea96d5428b53dbba5c?size=1024" alt="kubus" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-bold mb-2">kubus</h3>
+<p class="text-primary mb-4">CSM, Developer</p>
+<p class="text-gray-300">Zarząd projektu LiteCode, Główny Discord Developer zajmujący się projektowaniem i tworzeniem Discord Bot oraz zabezpieczeń dla twojego projektu.</p>
+=======
+</div>
+</div>
+<!-- Team Member 3 -->
+<div class="bg-[#0f0f24] rounded-lg overflow-hidden group">
+<div class="p-8 text-center">
+<div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+<img src="https://cdn.discordapp.com/avatars/463714488462606336/ea8aaeaf478acabbed03f7282fe13130?size=1024" alt="Dyzio" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-bold mb-2">Dyzio</h3>
+<p class="text-primary mb-4">Management, Lead Backend Developer</p>
+<p class="text-gray-300">Zarząd projektu LiteCode, Głowny developer Backendowy, odpowiedzialny za architekturę systemów.</p>
+=======
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="py-20 px-4 relative">
+<div class="container mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Co mówią nasi <span class="text-primary">klienci</span></h2>
+<p class="text-gray-300 max-w-2xl mx-auto">Poznaj opinie naszych klientów, którzy zaufali nam i skorzystali z naszych usług. Ich doświadczenia są najlepszym świadectwem jakości naszej pracy.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36]">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+<i class="ri-user-line ri-lg text-primary"></i>
+</div>
+<div>
+<h3 class="font-bold">Adrian</h3>
+<p class="text-gray-400 text-sm">Klient</p>
+</div>
+</div>
+<div class="flex text-primary mb-4">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+</div>
+<p class="text-gray-300">Chłopaki z LiteCode wykazali się ogromnym doświadczeniem, stworzyli dla mnie zajebistą strone internetową pod mój serwer Minecraft, serdecznie polecam chłopaków.</p>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36]">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+<i class="ri-user-line ri-lg text-primary"></i>
+</div>
+<div>
+<h3 class="font-bold">serkqu__</h3>
+<p class="text-gray-400 text-sm">Klient</p>
+</div>
+</div>
+<div class="flex text-primary mb-4">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+</div>
+<p class="text-gray-300">Współpracuje z LiteCode już od dawna hostuje u nich discord bota którego mi stworzyli, kupiłem również integracje pomiędzy moim disordem a moją stroną internetową i LiteCode naprawdę szybko ogarneli sprawę. Polecam</p>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-[#0f0f24] p-8 rounded-lg border border-[#1a1a36]">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+<i class="ri-user-line ri-lg text-primary"></i>
+</div>
+<div>
+<h3 class="font-bold">Robert W.</h3>
+<p class="text-gray-400 text-sm">Klient</p>
+</div>
+</div>
+<div class="flex text-primary mb-4">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+</div>
+<p class="text-gray-300">Posiadam firmę budowlaną, potrzebowałem strony internetowej która poprawi logisyke mojej firmy, chłopaki naprawdę się postarali i zrobili dobrą robotę, czekałem na stronę lekko ponad tydzień i chłopaki mnie zaskoczyli z całego serca mogę polecić LiteCode</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-20 px-4 relative bg-[#080814]">
+<div class="container mx-auto max-w-4xl bg-gradient-to-r from-[#0f0f24] to-[#101038] rounded-xl p-12 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="star w-1 h-1 top-[10%] left-[5%]" style="animation-delay: 0.5s;"></div>
+<div class="star w-2 h-2 top-[15%] left-[15%]" style="animation-delay: 1.5s;"></div>
+<div class="star w-1 h-1 top-[25%] left-[25%]" style="animation-delay: 2.5s;"></div>
+<div class="star w-1 h-1 top-[8%] left-[35%]" style="animation-delay: 1s;"></div>
+<div class="star w-2 h-2 top-[20%] left-[45%]" style="animation-delay: 0s;"></div>
+<div class="star w-1 h-1 top-[30%] left-[55%]" style="animation-delay: 2s;"></div>
+<div class="star w-1 h-1 top-[12%] left-[65%]" style="animation-delay: 1.2s;"></div>
+<div class="star w-2 h-2 top-[18%] left-[75%]" style="animation-delay: 0.7s;"></div>
+<div class="star w-1 h-1 top-[28%] left-[85%]" style="animation-delay: 1.7s;"></div>
+<div class="star w-1 h-1 top-[35%] left-[95%]" style="animation-delay: 2.2s;"></div>
+</div>
+<div class="relative z-10 text-center">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Gotowy na <span class="text-primary">współpracę</span>?</h2>
+<p class="text-gray-300 max-w-2xl mx-auto mb-8">Skontaktuj się z nami już dziś i rozpocznij transformację cyfrową swojego biznesu. Nasi eksperci są gotowi, aby pomóc Ci osiągnąć sukces online.</p>
+<div class="flex items-center justify-center">
+<a href="https://discord.gg/udd9cmw6nk" class="bg-primary hover:bg-secondary text-white py-3 px-8 rounded-button whitespace-nowrap transition-colors flex items-center gap-2">
+<i class="ri-discord-fill text-xl"></i>
+Dołącz już dziś
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-[#050510] py-12 px-4">
+<div class="container mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+<div>
+<a href="#" class="flex items-center gap-2 mb-4">
+<img src="https://i.imgur.com/p9TtvB3.png" alt="LiteCode Logo" class="h-8">
+<span class="text-xl font-bold text-primary">LiteCode</span>
+</a>
+<p class="text-gray-400 mb-4">Profesjonalne rozwiązania IT dla Twojego biznesu. Tworzymy nowoczesne strony internetowe, sklepy online i aplikacje mobilne.</p>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-4">Usługi</h3>
+<ul class="space-y-2">
+<li><a href="#oferta" class="text-gray-400 hover:text-primary transition-colors">Tworzenie stron www</a></li>
+<li><a href="#oferta" class="text-gray-400 hover:text-primary transition-colors">Sklepy internetowe</a></li>
+<li><a href="#oferta" class="text-gray-400 hover:text-primary transition-colors">Aplikacje mobilne</a></li>
+<li><a href="#oferta" class="text-gray-400 hover:text-primary transition-colors">Systemy CRM</a></li>
+<li><a href="#oferta" class="text-gray-400 hover:text-primary transition-colors">Hosting i domeny</a></li>
+<li><a href="#oferta" class="text-gray-400 hover:text-primary transition-colors">Optymalizacja SEO</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-4">Informacje</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-primary transition-colors">O nas</a></li>
+<li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Zespół</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-4">Kontakt</h3>
+<ul class="space-y-4">
+<li class="flex items-center gap-3">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-mail-line text-primary"></i>
+</div>
+<a href="mailto:kontakt@litecode.pl" class="text-gray-400 hover:text-primary transition-colors">kontakt@litecode.pl</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-[#1a1a36] text-center text-gray-500 text-sm">
+<p>&copy; 2025 LiteCode. Wszelkie prawa zastrzeżone.</p>
+</div>
+</div>
+</footer>
+<script id="navigation-script">
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuButton = document.querySelector('.md\\:hidden');
+const nav = document.querySelector('nav');
+if (mobileMenuButton && nav) {
+mobileMenuButton.addEventListener('click', function() {
+nav.classList.toggle('hidden');
+nav.classList.toggle('flex');
+nav.classList.toggle('flex-col');
+nav.classList.toggle('absolute');
+nav.classList.toggle('top-20');
+nav.classList.toggle('right-8');
+nav.classList.toggle('bg-[#0a0a16]');
+nav.classList.toggle('p-4');
+nav.classList.toggle('rounded-lg');
+nav.classList.toggle('shadow-lg');
+nav.classList.toggle('z-50');
+});
+}
+});
+</script>
+<script id="loader-script">
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    const loader = document.getElementById('loader');
+    loader.style.opacity = '0';
+    setTimeout(function() {
+      loader.style.display = 'none';
+    }, 300);
+  }, 2000);
+});
+</script>
+</body>
+</html>

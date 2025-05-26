@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiteCode | Website</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#6d28d9',secondary:'#4f46e5'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background-color: #111827;
+color: #f3f4f6;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-checkbox {
+display: grid;
+grid-template-columns: 1em auto;
+gap: 0.75em;
+position: relative;
+}
+.custom-checkbox input[type="checkbox"] {
+appearance: none;
+background-color: #1f2937;
+margin: 0;
+width: 1.5em;
+height: 1.5em;
+border: 2px solid #4b5563;
+border-radius: 0.25em;
+display: grid;
+place-content: center;
+cursor: pointer;
+}
+.custom-checkbox input[type="checkbox"]:checked {
+background-color: #6d28d9;
+border-color: #6d28d9;
+}
+.custom-checkbox input[type="checkbox"]::before {
+content: "";
+width: 0.65em;
+height: 0.65em;
+transform: scale(0);
+transition: 120ms transform ease-in-out;
+box-shadow: inset 1em 1em white;
+transform-origin: center;
+clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.custom-checkbox input[type="checkbox"]:checked::before {
+transform: scale(1);
+}
+.custom-checkbox input[type="checkbox"]:disabled {
+background-color: #374151;
+border-color: #4b5563;
+opacity: 0.5;
+cursor: not-allowed;
+}
+.custom-checkbox label {
+line-height: 1.5;
+cursor: pointer;
+}
+.custom-checkbox input[type="checkbox"]:disabled + label {
+opacity: 0.5;
+cursor: not-allowed;
+}
+</style>
+</head>
+<body class="min-h-screen">
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+<!-- Header -->
+<header class="flex items-center justify-between mb-10">
+<div class="flex items-center gap-3">
+<img src="https://i.imgur.com/ipPhGVY.png" alt="LiteCode Logo" class="h-12">
+<h1 class="text-2xl font-bold">LiteCode <span class="text-primary">|</span> Website</h1>
+</div>
+</header>
+<div class="bg-gray-900 rounded-lg p-6 shadow-lg mb-8">
+<h2 class="text-xl font-semibold mb-6 flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2 bg-primary rounded-full">
+<i class="ri-layout-line text-white"></i>
+</div>
+Wybierz Typ Strony
+</h2>
+<div class="space-y-4">
+<div class="custom-checkbox">
+<input type="checkbox" id="portfolio" name="website_type" value="portfolio" data-price="49.99">
+<label for="portfolio" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-palette-line mr-2 text-primary"></i>
+<span class="font-medium">Portfolio</span>
+<span class="ml-2 text-primary font-semibold">49.99 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Profesjonalna strona do prezentacji Twoich projektów i umiejętności</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="informational" name="website_type" value="informational" data-price-min="20" data-price-max="100">
+<label for="informational" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-file-text-line mr-2 text-primary"></i>
+<span class="font-medium">Strona informacyjna</span>
+<span class="ml-2 text-primary font-semibold">20-100 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Strona z informacjami o Twojej firmie lub usługach (cena zależna od zaawansowania)</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="shop" name="website_type" value="shop" disabled>
+<label for="shop" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-shopping-bag-line mr-2 text-gray-500"></i>
+<span class="font-medium">Sklep Internetowy</span>
+<span class="ml-2 text-gray-500">aktualnie niedostępne</span>
+</span>
+<span class="text-sm text-gray-500 mt-1">Pełnoprawny sklep internetowy z systemem płatności i zarządzaniem produktami</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="dashboard" name="website_type" value="dashboard" data-price-min="100" data-price-max="300">
+<label for="dashboard" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-dashboard-line mr-2 text-primary"></i>
+<span class="font-medium">Panel Sterowania</span>
+<span class="ml-2 text-primary font-semibold">100-300 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Zaawansowany panel administracyjny do zarządzania treścią (cena zależna od funkcjonalności)</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="other" name="website_type" value="other">
+<label for="other" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-tools-line mr-2 text-primary"></i>
+<span class="font-medium">Inne</span>
+<span class="ml-2 text-primary font-semibold">Wycena indywidualna</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Niestandardowy projekt dostosowany do Twoich specyficznych potrzeb</span>
+</label>
+</div>
+</div>
+</div>
+<div class="bg-gray-900 rounded-lg p-6 shadow-lg mb-8">
+<h2 class="text-xl font-semibold mb-6 flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2 bg-primary rounded-full">
+<i class="ri-function-line text-white"></i>
+</div>
+Funkcje Dodatkowe
+</h2>
+<div class="space-y-4">
+<div class="custom-checkbox">
+<input type="checkbox" id="ai_integration" name="additional_feature" value="ai_integration" data-price-min="25" data-price-max="100">
+<label for="ai_integration" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-robot-line mr-2 text-primary"></i>
+<span class="font-medium">Integracja AI</span>
+<span class="ml-2 text-primary font-semibold">25-100 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Zaawansowane funkcje AI dostosowane do Twojej strony (cena zależna od technologii)</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="discord_integration" name="additional_feature" value="discord_integration" data-price="15.23">
+<label for="discord_integration" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-discord-line mr-2 text-primary"></i>
+<span class="font-medium">Integracja Discord</span>
+<span class="ml-2 text-primary font-semibold">15.23 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Połączenie Twojej strony z serwerem Discord</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="virtual_assistant" name="additional_feature" value="virtual_assistant" data-price="94.99">
+<label for="virtual_assistant" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-customer-service-line mr-2 text-primary"></i>
+<span class="font-medium">Wirtualny asystent</span>
+<span class="ml-2 text-primary font-semibold">94.99 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Inteligentny asystent pomagający użytkownikom Twojej strony</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="hosting" name="additional_feature" value="hosting" data-price="30">
+<label for="hosting" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-server-line mr-2 text-primary"></i>
+<span class="font-medium">Hosting WWW</span>
+<span class="ml-2 text-primary font-semibold">30 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Profesjonalny hosting dla Twojej strony internetowej</span>
+</label>
+</div>
+<div class="custom-checkbox">
+<input type="checkbox" id="litecode_hosting" name="additional_feature" value="litecode_hosting" data-price="0">
+<label for="litecode_hosting" class="flex flex-col">
+<span class="flex items-center">
+<i class="ri-home-line mr-2 text-primary"></i>
+<span class="font-medium">Strona hostowana przez LiteCode</span>
+<span class="ml-2 text-primary font-semibold">0 zł</span>
+</span>
+<span class="text-sm text-gray-400 mt-1">Darmowy hosting (użytkownik nie ma dostępu do kodu strony)</span>
+</label>
+</div>
+</div>
+</div>
+<div class="bg-gray-900 rounded-lg p-6 shadow-lg mb-8">
+<h2 class="text-xl font-semibold mb-6 flex items-center">
+<div class="w-8 h-8 flex items-center justify-center mr-2 bg-primary rounded-full">
+<i class="ri-message-3-line text-white"></i>
+</div>
+Dodatkowe wymagania
+</h2>
+<textarea id="prompt" rows="4" class="w-full bg-gray-800 border-none rounded p-3 text-gray-200 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Opisz dodatkowe wymagania dla swojej strony..."></textarea>
+</div>
+<div class="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg mb-8">
+<div class="flex items-center justify-center">
+<i class="ri-time-line text-2xl text-primary mr-3"></i>
+<p class="text-center">Czas realizacji zamówienia: <span class="font-semibold text-white">3-21 dni roboczych</span> (w zależności od zaawansowania projektu)</p>
+</div>
+</div>
+<div class="bg-primary bg-opacity-10 rounded-lg p-6 shadow-lg mb-8 border border-primary border-opacity-30">
+<div class="text-center">
+<h3 class="text-xl font-bold mb-2">Podsumowanie zamówienia</h3>
+<div class="text-3xl font-bold text-primary mb-4" id="total-price">0.00 zł</div>
+<p class="text-sm text-gray-400 mb-4">* Dla opcji z przedziałem cenowym, ostateczna kwota zostanie ustalona podczas rozmowy z naszym botem na Discord, w zależności od stopnia zaawansowania wybranych funkcji.</p>
+<button id="order-button" class="bg-primary hover:bg-opacity-80 text-white font-semibold py-3 px-6 rounded-button transition-all whitespace-nowrap">Zamów Stronę</button>
+</div>
+</div>
+</div>
+<!-- Modal -->
+<div id="order-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+<div class="bg-gray-900 rounded-lg p-6 shadow-2xl max-w-md w-full mx-4">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-bold">Formularz zamówienia</h3>
+<button id="close-modal" class="text-gray-400 hover:text-white">
+<i class="ri-close-line text-2xl"></i>
+</button>
+</div>
+<form id="order-form" class="space-y-4">
+<div>
+<label for="discord-id" class="block text-sm font-medium mb-1">Discord ID</label>
+<input type="text" id="discord-id" class="w-full bg-gray-800 border-none rounded p-3 text-gray-200 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="np. username#1234" required>
+</div>
+<div>
+<label for="email" class="block text-sm font-medium mb-1">Email</label>
+<input type="email" id="email" class="w-full bg-gray-800 border-none rounded p-3 text-gray-200 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="twoj@email.com" required>
+</div>
+<div>
+<h4 class="text-sm font-medium mb-2">Podsumowanie wybranych opcji:</h4>
+<div id="order-summary" class="bg-gray-800 rounded p-3 text-sm max-h-40 overflow-y-auto"></div>
+</div>
+<div class="pt-2">
+<div class="flex justify-between items-center">
+<span class="font-semibold">Całkowita kwota:</span>
+<span id="modal-total-price" class="text-xl font-bold text-primary">0.00 zł</span>
+</div>
+</div>
+<button type="submit" class="w-full bg-primary hover:bg-opacity-80 text-white font-semibold py-3 px-6 rounded-button transition-all mt-4 whitespace-nowrap">Potwierdź Zamówienie</button>
+</form>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const websiteTypeCheckboxes = document.querySelectorAll('input[name="website_type"]');
+const additionalFeatureCheckboxes = document.querySelectorAll('input[name="additional_feature"]');
+const totalPriceElement = document.getElementById('total-price');
+const modalTotalPriceElement = document.getElementById('modal-total-price');
+const orderButton = document.getElementById('order-button');
+const orderModal = document.getElementById('order-modal');
+const closeModalButton = document.getElementById('close-modal');
+const orderForm = document.getElementById('order-form');
+const orderSummary = document.getElementById('order-summary');
+// Ensure only one website type is selected
+websiteTypeCheckboxes.forEach(checkbox => {
+checkbox.addEventListener('change', function() {
+if (this.checked) {
+websiteTypeCheckboxes.forEach(cb => {
+if (cb !== this) cb.checked = false;
+});
+}
+updateTotalPrice();
+});
+});
+// Update price when additional features are selected
+additionalFeatureCheckboxes.forEach(checkbox => {
+checkbox.addEventListener('change', updateTotalPrice);
+});
+// Prevent selecting both hosting options
+const hostingCheckbox = document.getElementById('hosting');
+const litecodeHostingCheckbox = document.getElementById('litecode_hosting');
+hostingCheckbox.addEventListener('change', function() {
+if (this.checked) {
+litecodeHostingCheckbox.checked = false;
+}
+updateTotalPrice();
+});
+litecodeHostingCheckbox.addEventListener('change', function() {
+if (this.checked) {
+hostingCheckbox.checked = false;
+}
+updateTotalPrice();
+});
+// Update total price
+function updateTotalPrice() {
+let total = 0;
+let summary = '';
+// Calculate website type price
+websiteTypeCheckboxes.forEach(checkbox => {
+if (checkbox.checked) {
+const label = document.querySelector(`label[for="${checkbox.id}"]`).querySelector('span span:nth-child(2)').textContent;
+const price = checkbox.dataset.price;
+const priceMin = checkbox.dataset.priceMin;
+const priceMax = checkbox.dataset.priceMax;
+if (price) {
+total += parseFloat(price);
+summary += `<div class="mb-1"><span class="font-medium">${label}:</span> ${price} zł</div>`;
+} else if (priceMin && priceMax) {
+// For price ranges, use the average for calculation
+const avgPrice = (parseFloat(priceMin) + parseFloat(priceMax)) / 2;
+total += avgPrice;
+summary += `<div class="mb-1"><span class="font-medium">${label}:</span> ${priceMin}-${priceMax} zł (średnio: ${avgPrice.toFixed(2)} zł)</div>`;
+} else {
+summary += `<div class="mb-1"><span class="font-medium">${label}:</span> Wycena indywidualna</div>`;
+}
+}
+});
+// Calculate additional features price
+additionalFeatureCheckboxes.forEach(checkbox => {
+if (checkbox.checked) {
+const label = document.querySelector(`label[for="${checkbox.id}"]`).querySelector('span span:nth-child(2)').textContent;
+const price = checkbox.dataset.price;
+const priceMin = checkbox.dataset.priceMin;
+const priceMax = checkbox.dataset.priceMax;
+if (price) {
+total += parseFloat(price);
+summary += `<div class="mb-1"><span class="font-medium">${label}:</span> ${price} zł</div>`;
+} else if (priceMin && priceMax) {
+// For price ranges, use the average for calculation
+const avgPrice = (parseFloat(priceMin) + parseFloat(priceMax)) / 2;
+total += avgPrice;
+summary += `<div class="mb-1"><span class="font-medium">${label}:</span> ${priceMin}-${priceMax} zł (średnio: ${avgPrice.toFixed(2)} zł)</div>`;
+}
+}
+});
+// Add prompt text to summary if available
+const promptText = document.getElementById('prompt').value;
+if (promptText.trim()) {
+summary += `<div class="mt-2 pt-2 border-t border-gray-700"><span class="font-medium">Dodatkowe wymagania:</span> ${promptText}</div>`;
+}
+// Update total price display
+totalPriceElement.textContent = `${total.toFixed(2)} zł`;
+modalTotalPriceElement.textContent = `${total.toFixed(2)} zł`;
+// Update order summary
+orderSummary.innerHTML = summary || '<div class="text-gray-500">Nie wybrano żadnych opcji</div>';
+}
+// Open modal when order button is clicked
+orderButton.addEventListener('click', function() {
+updateTotalPrice(); // Ensure summary is up to date
+orderModal.classList.remove('hidden');
+});
+// Close modal when close button is clicked
+closeModalButton.addEventListener('click', function() {
+orderModal.classList.add('hidden');
+});
+// Close modal when clicking outside
+orderModal.addEventListener('click', function(e) {
+if (e.target === orderModal) {
+orderModal.classList.add('hidden');
+}
+});
+// Handle form submission
+orderForm.addEventListener('submit', function(e) {
+e.preventDefault();
+const discordId = document.getElementById('discord-id').value;
+const email = document.getElementById('email').value;
+if (!discordId || !email) {
+alert('Proszę wypełnić wszystkie wymagane pola.');
+return;
+}
+// Collect selected options
+let selectedOptions = [];
+websiteTypeCheckboxes.forEach(checkbox => {
+if (checkbox.checked) {
+const label = document.querySelector(`label[for="${checkbox.id}"]`).querySelector('span span:nth-child(2)').textContent;
+selectedOptions.push(`Typ strony: ${label}`);
+}
+});
+additionalFeatureCheckboxes.forEach(checkbox => {
+if (checkbox.checked) {
+const label = document.querySelector(`label[for="${checkbox.id}"]`).querySelector('span span:nth-child(2)').textContent;
+selectedOptions.push(`Funkcja dodatkowa: ${label}`);
+}
+});
+const promptText = document.getElementById('prompt').value;
+if (promptText.trim()) {
+selectedOptions.push(`Dodatkowe wymagania: ${promptText}`);
+}
+// Prepare data for webhook
+const webhookData = {
+embeds: [{
+title: "Nowe zamówienie strony",
+color: 8847897, // Purple color in decimal
+fields: [
+{
+name: "Discord ID",
+value: discordId,
+inline: true
+},
+{
+name: "Email",
+value: email,
+inline: true
+},
+{
+name: "Wybrane opcje",
+value: selectedOptions.join('\n') || "Brak wybranych opcji"
+},
+{
+name: "Całkowita kwota",
+value: totalPriceElement.textContent
+}
+],
+timestamp: new Date().toISOString()
+}]
+};
+// Send webhook to Discord
+fetch('https://discord.com/api/webhooks/1373628206858375178/-HBG7aZL4Fuik2WIsMha7sOsFvG5CeMFjvdkiz46oK5DzzVH4vTxQcmVBvCNywKVt7RS', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(webhookData),
+})
+.then(response => {
+if (response.ok) {
+orderModal.classList.add('hidden');
+orderForm.reset();
+showSuccessMessage();
+} else {
+showErrorMessage('Wystąpił błąd podczas wysyłania zamówienia. Spróbuj ponownie później.');
+}
+})
+.catch(error => {
+console.error('Error:', error);
+showErrorMessage('Wystąpił błąd podczas wysyłania zamówienia. Spróbuj ponownie później.');
+});
+});
+function showSuccessMessage() {
+const successModal = document.createElement('div');
+successModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+successModal.innerHTML = `
+<div class="bg-gray-900 rounded-lg p-8 shadow-2xl max-w-md w-full mx-4 text-center">
+<div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+<i class="ri-check-line text-4xl text-white"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4">Zamówienie zrealizowane!</h3>
+<p class="text-gray-300 mb-6">Dołącz do naszego serwera Discord i wyślij wiadomość prywatną do naszego bota, aby zrealizować płatność.</p>
+<a href="https://discord.gg/udd9cmw6nk" target="_blank" class="inline-flex items-center justify-center bg-primary hover:bg-opacity-80 text-white font-semibold py-3 px-6 rounded-button transition-all gap-2 whitespace-nowrap">
+<i class="ri-discord-fill"></i>
+Dołącz do Discord
+</a>
+</div>
+`;
+document.body.appendChild(successModal);
+successModal.addEventListener('click', function(e) {
+if (e.target === successModal) {
+document.body.removeChild(successModal);
+}
+});
+}
+function showErrorMessage(message) {
+const errorModal = document.createElement('div');
+errorModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+errorModal.innerHTML = `
+<div class="bg-gray-900 rounded-lg p-8 shadow-2xl max-w-md w-full mx-4 text-center">
+<div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+<i class="ri-close-line text-4xl text-white"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4">Wystąpił błąd</h3>
+<p class="text-gray-300 mb-6">${message}</p>
+<button class="bg-primary hover:bg-opacity-80 text-white font-semibold py-3 px-6 rounded-button transition-all whitespace-nowrap">
+Zamknij
+</button>
+</div>
+`;
+document.body.appendChild(errorModal);
+const closeButton = errorModal.querySelector('button');
+closeButton.addEventListener('click', () => {
+document.body.removeChild(errorModal);
+});
+errorModal.addEventListener('click', function(e) {
+if (e.target === errorModal) {
+document.body.removeChild(errorModal);
+}
+});
+}
+// Initial price update
+updateTotalPrice();
+});
+</script>
+</body>
+</html>

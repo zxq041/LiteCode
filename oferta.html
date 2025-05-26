@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lite Code | Oferta</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#1e40af'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #0f172a;
+color: #f8fafc;
+font-family: 'Inter', sans-serif;
+background-image:
+radial-gradient(circle at 20% 30%, rgba(58, 155, 220, 0.05) 0%, transparent 50%),
+radial-gradient(circle at 80% 60%, rgba(58, 155, 220, 0.05) 0%, transparent 50%);
+}
+.geometric-bg {
+position: absolute;
+width: 100%;
+height: 100%;
+top: 0;
+left: 0;
+overflow: hidden;
+z-index: -1;
+}
+.geometric-shape {
+position: absolute;
+border: 2px solid rgba(58, 155, 220, 0.1);
+animation: float 15s infinite ease-in-out;
+}
+.shape-circle {
+border-radius: 50%;
+}
+.shape-square {
+border-radius: 4px;
+transform: rotate(45deg);
+}
+.shape-triangle {
+clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+background: rgba(58, 155, 220, 0.1);
+border: none;
+}
+.shape-1 {
+width: 100px;
+height: 100px;
+top: 10%;
+left: 5%;
+animation-delay: 0s;
+}
+.shape-2 {
+width: 150px;
+height: 150px;
+top: 40%;
+right: 10%;
+animation-delay: -2s;
+}
+.shape-3 {
+width: 80px;
+height: 80px;
+bottom: 20%;
+left: 15%;
+animation-delay: -4s;
+}
+.animate-fade-in {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.animate-fade-in.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.card-hover {
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+transform: translateY(-5px);
+box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+}
+.neon-glow {
+box-shadow: 0 0 10px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.2);
+}
+.custom-button {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.5rem 1.25rem;
+background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+color: white;
+border-radius: 8px;
+transition: all 0.3s ease;
+position: relative;
+overflow: hidden;
+}
+.custom-button:hover {
+transform: translateX(5px);
+}
+.custom-button:hover i {
+animation: slideRight 0.3s ease forwards;
+}
+.btn-disabled {
+pointer-events: none;
+opacity: 0.7;
+background: #4b5563;
+}
+@keyframes slideRight {
+0% { transform: translateX(0); }
+100% { transform: translateX(5px); }
+}
+.hero-dot {
+position: absolute;
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background-color: #3b82f6;
+opacity: 0.6;
+animation: float 6s infinite ease-in-out;
+}
+@keyframes float {
+0%, 100% { transform: translateY(0) translateX(0); }
+50% { transform: translateY(-20px) translateX(10px); }
+}
+</style>
+</head>
+<body class="min-h-screen">
+<!-- Navbar -->
+<nav class="w-full py-4 px-6 md:px-12 flex justify-between items-center bg-gray-900/80 backdrop-blur-sm fixed top-0 z-50">
+<div class="flex items-center">
+<img src="https://i.imgur.com/p9TtvB3.png" alt="Lite Code Logo" class="h-10">
+</div>
+<a href="#" class="custom-button whitespace-nowrap">
+<i class="ri-home-line"></i>
+<span>Strona Główna</span>
+</a>
+</nav>
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 px-6 md:px-12 overflow-hidden">
+<div class="geometric-bg">
+<div class="geometric-shape shape-circle shape-1"></div>
+<div class="geometric-shape shape-square shape-2"></div>
+<div class="geometric-shape shape-triangle shape-3"></div>
+<div class="geometric-shape shape-circle shape-4" style="width: 120px; height: 120px; top: 60%; right: 5%; animation-delay: -6s;"></div>
+<div class="geometric-shape shape-square shape-5" style="width: 60px; height: 60px; bottom: 15%; left: 45%; animation-delay: -8s;"></div>
+<div class="geometric-shape shape-triangle shape-6" style="width: 100px; height: 100px; top: 25%; left: 35%; animation-delay: -10s;"></div>
+</div>
+<div class="hero-dot" style="top: 20%; left: 10%;"></div>
+<div class="hero-dot" style="top: 30%; right: 15%;"></div>
+<div class="hero-dot" style="top: 70%; left: 20%;"></div>
+<div class="hero-dot" style="bottom: 20%; right: 25%;"></div>
+<div class="max-w-5xl mx-auto text-center animate-fade-in visible">
+<h1 class="text-4xl md:text-6xl font-bold mb-6 text-white">
+<span class="text-primary">Lite Code</span> | Oferta
+</h1>
+<p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+Kompleksowe usługi cyfrowe dostosowane do Twoich potrzeb. Innowacyjne rozwiązania, które wyróżnią Cię w sieci.
+</p>
+</div>
+</section>
+<!-- Services Grid -->
+<section class="px-6 md:px-12 py-16">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Strony Internetowe -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-code-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Strony Internetowe</h3>
+<p class="text-gray-300 mb-6">
+Nasz zespół stworzy dla ciebie innowacyjną stronę internetową pod twoje preferencje. Projektujemy z myślą o użytkownikach i Twoich celach biznesowych.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">Wycena indywidualna</span>
+<a href="#" class="custom-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+<span>Zamów</span>
+</a>
+<!-- Tu Kreator Strony -->
+</div>
+</div>
+<!-- Discord Bot -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-robot-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Discord Bot</h3>
+<p class="text-gray-300 mb-6">
+Zautomatyzuj swój serwer Discord dzięki niestandardowemu botowi. Oferujemy rozwiązania dopasowane do Twoich potrzeb z zaawansowanymi funkcjami.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">Wycena indywidualna</span>
+<a href="#" class="custom-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+<span>Zamów</span>
+</a>
+<!-- Tu Kreator Discord Bot -->
+</div>
+</div>
+<!-- Serwer Discord -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-discord-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Serwer Discord</h3>
+<p class="text-gray-300 mb-6">
+Profesjonalne przygotowanie i konfiguracja serwera Discord dla Twojej społeczności. Kanały, role, uprawnienia i automatyzacja.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">5-100 zł (w zależności od zaawansowania)</span>
+<a href="#" class="custom-button whitespace-nowrap">
+<i class="ri-discord-line"></i>
+<span>Zamów</span>
+</a>
+<!-- Tu Kreator Discord -->
+</div>
+</div>
+<!-- Lite 1.0 -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-gamepad-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Lite 1.0</h3>
+<p class="text-gray-300 mb-6">
+Innowacyjny moduł AI tworzący zaawansowane pluginy do Minecraft. Rewolucyjne rozwiązanie dla serwerów gry, które chcą wyróżnić się na tle konkurencji.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">Wkrótce dostępne</span>
+<button class="custom-button btn-disabled whitespace-nowrap">
+<i class="ri-time-line"></i>
+<span>Wkrótce</span>
+</button>
+</div>
+</div>
+<!-- Discord Bot Hosting -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-cloud-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Discord Bot Hosting</h3>
+<p class="text-gray-300 mb-6">
+Profesjonalny hosting dla Twojego bota Discord. Stabilność, wydajność i wsparcie techniczne 24/7.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">Sprawdź cennik</span>
+<a href="#" class="custom-button whitespace-nowrap">
+<i class="ri-cloud-line"></i>
+<span>Oferta</span>
+</a>
+<!-- Tu Cennik Hostingu -->
+</div>
+</div>
+<!-- Minecraft Hosting -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-game-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Hosting Minecraft</h3>
+<p class="text-gray-300 mb-6">
+Wydajny hosting serwerów Minecraft. Zoptymalizowane pod kątem wydajności i stabilności.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">Dostępne wkrótce</span>
+<button class="custom-button btn-disabled whitespace-nowrap">
+<i class="ri-time-line"></i>
+<span>Wkrótce</span>
+</button>
+</div>
+</div>
+<!-- Embed Creator -->
+<div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg card-hover animate-fade-in neon-glow">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mb-6">
+<i class="ri-layout-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3">Kreator Embedów</h3>
+<p class="text-gray-300 mb-6">
+Twórz profesjonalne embedy dla swojego serwera Discord. Intuicyjny kreator z podglądem na żywo.
+</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="text-gray-400">Stwórz własny embed</span>
+<a href="#" class="custom-button whitespace-nowrap">
+<i class="ri-layout-line"></i>
+<span>Przejdź</span>
+</a>
+<!-- Tu Panel Tworzenia Embedów -->
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-gray-900 py-12 px-6 md:px-12 mt-16">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-center mb-8">
+<div class="flex items-center mb-6 md:mb-0">
+<img src="https://i.imgur.com/p9TtvB3.png" alt="Lite Code Logo" class="h-12 mr-3">
+<span class="text-xl font-bold text-white">Lite Code</span>
+</div>
+<div class="flex space-x-4">
+<a href="https://discord.gg/udd9cmw6nk" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary/20 transition-all">
+<i class="ri-discord-fill ri-lg text-primary"></i>
+</a>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8">
+<p class="text-center text-gray-400">© 2025 Lite Code. Wszelkie prawa zastrzeżone.</p>
+</div>
+</div>
+</footer>
+<script id="animation-script">
+document.addEventListener('DOMContentLoaded', function() {
+const animatedElements = document.querySelectorAll('.animate-fade-in');
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+}
+});
+}, {
+threshold: 0.1
+});
+animatedElements.forEach(element => {
+observer.observe(element);
+});
+});
+</script>
+</body>
+</html> 

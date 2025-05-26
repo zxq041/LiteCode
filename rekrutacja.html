@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekrutacja - Litecode</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#1F2937'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #0D1117;
+color: #fff;
+font-family: 'Inter', sans-serif;
+position: relative;
+}
+@keyframes fade-in-out {
+0% { opacity: 0; transform: translateY(-20px); }
+10% { opacity: 1; transform: translateY(0); }
+90% { opacity: 1; transform: translateY(0); }
+100% { opacity: 0; transform: translateY(-20px); }
+}
+.animate-fade-in-out {
+animation: fade-in-out 3s ease-in-out forwards;
+}
+body::before {
+content: '';
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.03) 0%, transparent 50%);
+pointer-events: none;
+z-index: -1;
+}
+.job-card {
+background-color: #1F2937;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+position: relative;
+overflow: hidden;
+}
+.job-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(45deg, transparent 65%, rgba(37, 99, 235, 0.1) 100%);
+transition: all 0.4s ease;
+}
+.job-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+.job-card:hover::before {
+transform: scale(1.2);
+}
+input, textarea {
+background-color: #1F2937;
+border: 1px solid #374151;
+color: white;
+transition: all 0.3s ease;
+}
+input:focus, textarea:focus {
+border-color: #2563EB;
+outline: none;
+box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.form-section {
+display: none;
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.form-section.active {
+display: block;
+opacity: 1;
+transform: translateY(0);
+}
+@keyframes float {
+0% { transform: translateY(0px); }
+50% { transform: translateY(-10px); }
+100% { transform: translateY(0px); }
+}
+.animate-float {
+animation: float 6s ease-in-out infinite;
+}
+</style>
+</head>
+<body class="min-h-screen">
+<header class="bg-secondary py-4 px-6 flex justify-between items-center relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute w-40 h-40 bg-primary rounded-full -top-20 -left-20 animate-pulse"></div>
+<div class="absolute w-60 h-60 bg-primary rounded-full -bottom-40 -right-20 animate-pulse"></div>
+</div>
+<div class="flex items-center relative">
+<img src="https://i.imgur.com/U6108Jl.png" alt="Litecode Logo" class="h-10 mr-3">
+<span class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">Litecode</span>
+</div>
+<a href="#" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 !rounded-button whitespace-nowrap transition-all duration-300 transform hover:scale-105">Strona Główna</a>
+</header>
+<main class="container mx-auto px-4 py-12">
+<section class="text-center mb-16 relative py-12">
+<div class="absolute inset-0 overflow-hidden">
+<div class="absolute w-96 h-96 bg-primary/5 rounded-full -top-48 -left-48 animate-pulse"></div>
+<div class="absolute w-96 h-96 bg-primary/5 rounded-full -bottom-48 -right-48 animate-pulse"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full top-1/4 left-1/4 animate-ping"></div>
+<div class="absolute w-2 h-2 bg-primary rounded-full top-3/4 right-1/4 animate-ping"></div>
+</div>
+<h1 class="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 relative">Rekrutacja Litecode</h1>
+<p class="text-xl text-gray-300 max-w-3xl mx-auto relative">Dołącz do naszego zespołu i rozwijaj się z nami. Oferujemy elastyczne warunki pracy i atrakcyjne wynagrodzenie.</p>
+</section>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+<!-- JavaScript Developer -->
+<div class="job-card rounded p-6 flex flex-col h-full">
+<div class="w-16 h-16 flex items-center justify-center bg-blue-900 rounded-full mb-6 mx-auto">
+<i class="ri-code-s-slash-line ri-2x text-primary"></i>
+</div>
+<h2 class="text-2xl font-bold mb-2 text-center">JavaScript Developer</h2>
+<div class="mb-4 text-center">
+<span class="inline-block bg-blue-900 text-blue-300 px-3 py-1 rounded-full text-sm mr-2 mb-2">100% remote</span>
+<span class="inline-block bg-blue-900 text-blue-300 px-3 py-1 rounded-full text-sm mr-2 mb-2">Elastyczny grafik</span>
+<span class="inline-block bg-blue-900 text-blue-300 px-3 py-1 rounded-full text-sm mb-2">Indywidualne wynagrodzenie</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-lg font-semibold mb-2">Wymagania:</h3>
+<ul class="list-disc list-inside mb-4 text-gray-300">
+<li>W pełni opanowany JavaScript</li>
+<li>Mobilność</li>
+</ul>
+<h3 class="text-lg font-semibold mb-2">Twoje zadania:</h3>
+<p class="text-gray-300 mb-4">Twoje zadania będą się różniły w zależności od danego projektu. Główne obowiązki to:</p>
+<ul class="list-disc list-inside mb-4 text-gray-300">
+<li>Utrzymywanie wysokiej jakości kodu, stosowanie dobrych praktyk (modularność, DRY, Clean Code)</li>
+<li>Wdrażanie logiki aplikacji po stronie klienta oraz integracja z backendem poprzez REST API / GraphQL</li>
+<li>Monitorowanie wydajności aplikacji i proponowanie ulepszeń</li>
+</ul>
+</div>
+<button class="bg-primary text-white px-4 py-2 mt-4 !rounded-button whitespace-nowrap w-full" onclick="showForm('js-form')">Aplikuj</button>
+</div>
+<!-- Database Developer -->
+<div class="job-card rounded p-6 flex flex-col h-full">
+<div class="w-16 h-16 flex items-center justify-center bg-green-900 rounded-full mb-6 mx-auto">
+<i class="ri-database-2-line ri-2x text-green-400"></i>
+</div>
+<h2 class="text-2xl font-bold mb-2 text-center">Data Base Developer</h2>
+<div class="mb-4 text-center">
+<span class="inline-block bg-green-900 text-green-300 px-3 py-1 rounded-full text-sm mr-2 mb-2">100% remote</span>
+<span class="inline-block bg-green-900 text-green-300 px-3 py-1 rounded-full text-sm mr-2 mb-2">Elastyczny grafik</span>
+<span class="inline-block bg-green-900 text-green-300 px-3 py-1 rounded-full text-sm mb-2">Indywidualne wynagrodzenie</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-lg font-semibold mb-2">Wymagania:</h3>
+<ul class="list-disc list-inside mb-4 text-gray-300">
+<li>W pełni opanowany MySQL oraz PHP</li>
+<li>Mobilność</li>
+</ul>
+<h3 class="text-lg font-semibold mb-2">Twoje zadania:</h3>
+<p class="text-gray-300 mb-4">Twoje zadania będą się różniły w zależności od danego projektu. Główne obowiązki to:</p>
+<ul class="list-disc list-inside mb-4 text-gray-300">
+<li>Tworzenie prostych baz danych</li>
+<li>Optymalizacja zapytań i struktury baz danych</li>
+<li>Integracja baz danych z aplikacjami</li>
+</ul>
+</div>
+<button class="bg-primary text-white px-4 py-2 mt-4 !rounded-button whitespace-nowrap w-full" onclick="showForm('db-form')">Aplikuj</button>
+</div>
+<!-- Project Manager -->
+<div class="job-card rounded p-6 flex flex-col h-full">
+<div class="w-16 h-16 flex items-center justify-center bg-purple-900 rounded-full mb-6 mx-auto">
+<i class="ri-user-settings-line ri-2x text-purple-400"></i>
+</div>
+<h2 class="text-2xl font-bold mb-2 text-center">Project Manager</h2>
+<div class="mb-4 text-center">
+<span class="inline-block bg-purple-900 text-purple-300 px-3 py-1 rounded-full text-sm mr-2 mb-2">100% remote</span>
+<span class="inline-block bg-purple-900 text-purple-300 px-3 py-1 rounded-full text-sm mr-2 mb-2">Elastyczny grafik</span>
+<span class="inline-block bg-purple-900 text-purple-300 px-3 py-1 rounded-full text-sm mb-2">70% zysku z projektu</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-lg font-semibold mb-2">Wymagania:</h3>
+<ul class="list-disc list-inside mb-4 text-gray-300">
+<li>Doświadczenie w prowadzeniu projektów</li>
+<li>Mobilność</li>
+</ul>
+<h3 class="text-lg font-semibold mb-2">Twoje zadania:</h3>
+<p class="text-gray-300 mb-4">Twoje zadania obejmują:</p>
+<ul class="list-disc list-inside mb-4 text-gray-300">
+<li>Prowadzenie podprojektu Litecode</li>
+<li>Dobranie odpowiedniego zespołu do prowadzenia projektu</li>
+<li>Zarządzanie projektem</li>
+<li>Płynna komunikacja z supportem Litecode</li>
+</ul>
+</div>
+<button class="bg-primary text-white px-4 py-2 mt-4 !rounded-button whitespace-nowrap w-full" onclick="showForm('pm-form')">Aplikuj</button>
+</div>
+</section>
+<!-- Application Forms -->
+<section id="application-forms" class="mb-16">
+<div id="js-form" class="form-section bg-secondary rounded-lg p-8 max-w-2xl mx-auto">
+<h2 class="text-2xl font-bold mb-6 text-center">Aplikacja na stanowisko: JavaScript Developer</h2>
+<form id="js-application-form" onsubmit="submitForm(event, 'JavaScript Developer')">
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-name">Imię i nazwisko</label>
+<input type="text" id="js-name" name="name" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-email">Email</label>
+<input type="email" id="js-email" name="email" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-discord">Discord ID</label>
+<input type="text" id="js-discord" name="discord" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-age">Wiek</label>
+<input type="number" id="js-age" name="age" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-experience">Doświadczenie (minimum 100 słów)</label>
+<textarea id="js-experience" name="experience" required class="w-full px-4 py-2 rounded min-h-32" minlength="100"></textarea>
+</div>
+<div class="mb-6">
+<label class="block text-gray-300 mb-2" for="js-previous-work">Jakie prace wykonywałeś/aś wcześniej</label>
+<textarea id="js-previous-work" name="previous-work" required class="w-full px-4 py-2 rounded min-h-32"></textarea>
+</div>
+<div class="flex justify-between">
+<button type="button" class="bg-gray-600 text-white px-4 py-2 !rounded-button whitespace-nowrap" onclick="hideAllForms()">Anuluj</button>
+<button type="submit" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap">Wyślij aplikację</button>
+</div>
+</form>
+</div>
+<div id="db-form" class="form-section bg-secondary rounded-lg p-8 max-w-2xl mx-auto">
+<h2 class="text-2xl font-bold mb-6 text-center">Aplikacja na stanowisko: Data Base Developer</h2>
+<form id="db-application-form" onsubmit="submitForm(event, 'Data Base Developer')">
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="db-name">Imię i nazwisko</label>
+<input type="text" id="db-name" name="name" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="db-email">Email</label>
+<input type="email" id="db-email" name="email" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="db-discord">Discord ID</label>
+<input type="text" id="db-discord" name="discord" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="db-age">Wiek</label>
+<input type="number" id="db-age" name="age" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="db-experience">Doświadczenie (minimum 100 słów)</label>
+<textarea id="db-experience" name="experience" required class="w-full px-4 py-2 rounded min-h-32" minlength="100"></textarea>
+</div>
+<div class="mb-6">
+<label class="block text-gray-300 mb-2" for="db-previous-work">Jakie prace wykonywałeś/aś wcześniej</label>
+<textarea id="db-previous-work" name="previous-work" required class="w-full px-4 py-2 rounded min-h-32"></textarea>
+</div>
+<div class="flex justify-between">
+<button type="button" class="bg-gray-600 text-white px-4 py-2 !rounded-button whitespace-nowrap" onclick="hideAllForms()">Anuluj</button>
+<button type="submit" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap">Wyślij aplikację</button>
+</div>
+</form>
+</div>
+<div id="pm-form" class="form-section bg-secondary rounded-lg p-8 max-w-2xl mx-auto">
+<h2 class="text-2xl font-bold mb-6 text-center">Aplikacja na stanowisko: Project Manager</h2>
+<form id="pm-application-form" onsubmit="submitForm(event, 'Project Manager')">
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="pm-name">Imię i nazwisko</label>
+<input type="text" id="pm-name" name="name" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="pm-email">Email</label>
+<input type="email" id="pm-email" name="email" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="pm-discord">Discord ID</label>
+<input type="text" id="pm-discord" name="discord" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="pm-age">Wiek</label>
+<input type="number" id="pm-age" name="age" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-6">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="pm-experience">Jakie projekty prowadziłeś/aś wcześniej i czym się one zajmowały? (minimum 100 słów)</label>
+<div class="relative">
+<textarea
+id="pm-experience"
+name="experience"
+required
+class="w-full px-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 min-h-[200px] text-gray-100 placeholder-gray-500"
+minlength="100"
+placeholder="Opisz szczegółowo swoje doświadczenie w zarządzaniu projektami..."
+></textarea>
+<div class="absolute bottom-3 right-3 text-xs text-gray-500">Min. 100 słów</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+=======
+<<<<<<< ORIGINAL
+<div id="js-form" class="form-section bg-secondary rounded-lg p-8 max-w-2xl mx-auto">
+=======
+<div id="js-form" class="form-section bg-secondary rounded-xl p-8 max-w-2xl mx-auto shadow-2xl border border-gray-800">
+=======
+<<<<<<< ORIGINAL
+<form id="js-application-form" onsubmit="submitForm(event, 'JavaScript Developer')">
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-name">Imię i nazwisko</label>
+<input type="text" id="js-name" name="name" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-email">Email</label>
+<input type="email" id="js-email" name="email" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-discord">Discord ID</label>
+<input type="text" id="js-discord" name="discord" required class="w-full px-4 py-2 rounded">
+</div>
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-age">Wiek</label>
+<input type="number" id="js-age" name="age" required class="w-full px-4 py-2 rounded">
+</div>
+=======
+<form id="js-application-form" onsubmit="submitForm(event, 'JavaScript Developer')" class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="relative">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="js-name">Imię i nazwisko</label>
+<div class="relative">
+<i class="ri-user-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+<input type="text" id="js-name" name="name" required
+class="w-full pl-10 pr-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 text-gray-100 placeholder-gray-500"
+placeholder="Wprowadź swoje imię i nazwisko">
+</div>
+</div>
+<div class="relative">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="js-email">Email</label>
+<div class="relative">
+<i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+<input type="email" id="js-email" name="email" required
+class="w-full pl-10 pr-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 text-gray-100 placeholder-gray-500"
+placeholder="Wprowadź swój email">
+</div>
+</div>
+<div class="relative">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="js-discord">Discord ID</label>
+<div class="relative">
+<i class="ri-discord-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+<input type="text" id="js-discord" name="discord" required
+class="w-full pl-10 pr-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 text-gray-100 placeholder-gray-500"
+placeholder="Wprowadź swoje Discord ID">
+</div>
+</div>
+<div class="relative">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="js-age">Wiek</label>
+<div class="relative">
+<i class="ri-calendar-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+<input type="number" id="js-age" name="age" required
+class="w-full pl-10 pr-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 text-gray-100 placeholder-gray-500"
+placeholder="Wprowadź swój wiek">
+</div>
+</div>
+</div>
+=======
+<<<<<<< ORIGINAL
+<div class="mb-4">
+<label class="block text-gray-300 mb-2" for="js-experience">Doświadczenie (minimum 100 słów)</label>
+<textarea id="js-experience" name="experience" required class="w-full px-4 py-2 rounded min-h-32" minlength="100"></textarea>
+</div>
+<div class="mb-6">
+<label class="block text-gray-300 mb-2" for="js-previous-work">Jakie prace wykonywałeś/aś wcześniej</label>
+<textarea id="js-previous-work" name="previous-work" required class="w-full px-4 py-2 rounded min-h-32"></textarea>
+</div>
+<div class="flex justify-between">
+<button type="button" class="bg-gray-600 text-white px-4 py-2 !rounded-button whitespace-nowrap" onclick="hideAllForms()">Anuluj</button>
+<button type="submit" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap">Wyślij aplikację</button>
+</div>
+=======
+<div class="space-y-6">
+<div class="relative">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="js-experience">Doświadczenie (minimum 100 słów)</label>
+<div class="relative">
+<textarea
+id="js-experience"
+name="experience"
+required
+class="w-full px-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 min-h-[200px] text-gray-100 placeholder-gray-500"
+minlength="100"
+placeholder="Opisz swoje doświadczenie..."
+></textarea>
+<div class="absolute bottom-3 right-3 text-xs text-gray-500">Min. 100 słów</div>
+</div>
+</div>
+<div class="relative">
+<label class="block text-gray-300 mb-2 text-sm font-medium" for="js-previous-work">Jakie prace wykonywałeś/aś wcześniej</label>
+<div class="relative">
+<textarea
+id="js-previous-work"
+name="previous-work"
+required
+class="w-full px-4 py-3 rounded bg-gray-800 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-all duration-200 min-h-[200px] text-gray-100 placeholder-gray-500"
+placeholder="Opisz swoje poprzednie doświadczenia zawodowe..."
+></textarea>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4">
+<button
+type="button"
+class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 !rounded-button whitespace-nowrap transition-all duration-200 flex items-center gap-2"
+onclick="hideAllForms()">
+<i class="ri-close-line"></i>
+Anuluj
+</button>
+<button
+type="submit"
+class="bg-primary hover:bg-primary/90 text-white px-6 py-3 !rounded-button whitespace-nowrap transition-all duration-200 flex items-center gap-2">
+<i class="ri-send-plane-line"></i>
+Wyślij aplikację
+</button>
+</div>
+</div>
+=======
+<<<<<<< ORIGINAL
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #0D1117;
+color: #fff;
+font-family: 'Inter', sans-serif;
+position: relative;
+}
+@keyframes fade-in-out {
+0% { opacity: 0; transform: translateY(-20px); }
+10% { opacity: 1; transform: translateY(0); }
+90% { opacity: 1; transform: translateY(0); }
+100% { opacity: 0; transform: translateY(-20px); }
+}
+.animate-fade-in-out {
+animation: fade-in-out 3s ease-in-out forwards;
+}
+body::before {
+content: '';
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.03) 0%, transparent 50%);
+pointer-events: none;
+z-index: -1;
+}
+.job-card {
+background-color: #1F2937;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+position: relative;
+overflow: hidden;
+}
+.job-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(45deg, transparent 65%, rgba(37, 99, 235, 0.1) 100%);
+transition: all 0.4s ease;
+}
+.job-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+.job-card:hover::before {
+transform: scale(1.2);
+}
+input, textarea {
+background-color: #1F2937;
+border: 1px solid #374151;
+color: white;
+transition: all 0.3s ease;
+}
+input:focus, textarea:focus {
+border-color: #2563EB;
+outline: none;
+box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.form-section {
+display: none;
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.form-section.active {
+display: block;
+opacity: 1;
+transform: translateY(0);
+}
+@keyframes float {
+0% { transform: translateY(0px); }
+50% { transform: translateY(-10px); }
+100% { transform: translateY(0px); }
+}
+.animate-float {
+animation: float 6s ease-in-out infinite;
+}
+</style>
+=======
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #0D1117;
+color: #fff;
+font-family: 'Inter', sans-serif;
+}
+.job-card {
+background-color: #1F2937;
+transition: all 0.3s ease;
+}
+.job-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+input[type="number"] {
+-moz-appearance: textfield;
+}
+.form-section {
+display: none;
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.3s ease;
+}
+.form-section.active {
+display: block;
+opacity: 1;
+transform: translateY(0);
+}
+input::placeholder,
+textarea::placeholder {
+color: #6B7280;
+}
+input:focus::placeholder,
+textarea:focus::placeholder {
+color: #9CA3AF;
+}
+</style>
+<button type="button" class="bg-gray-600 text-white px-4 py-2 !rounded-button whitespace-nowrap" onclick="hideAllForms()">Anuluj</button>
+<button type="submit" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap">Wyślij aplikację</button>
+</div>
+</form>
+</div>
+</section>
+</main>
+<footer class="bg-secondary py-6 px-6 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute w-40 h-40 bg-primary rounded-full -top-20 -left-20 animate-pulse"></div>
+<div class="absolute w-60 h-60 bg-primary rounded-full -bottom-40 -right-20 animate-pulse"></div>
+</div>
+<div class="container mx-auto relative">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<div class="flex items-center mb-4 md:mb-0">
+<img src="https://i.imgur.com/U6108Jl.png" alt="Litecode Logo" class="h-8 mr-3">
+<span class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">Litecode</span>
+</div>
+<div class="text-gray-400 text-sm">
+<p>© 2025 Litecode. Wszelkie prawa zastrzeżone.</p>
+</div>
+<div class="mt-4 md:mt-0">
+<a href="https://discord.gg/udd9cmw6nk" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-discord-line"></i>
+</div>
+</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const hideAllForms = () => {
+const forms = document.querySelectorAll('.form-section');
+forms.forEach(form => form.classList.remove('active'));
+};
+const showForm = (formId) => {
+hideAllForms();
+const form = document.getElementById(formId);
+if (form) {
+form.classList.add('active');
+form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+};
+hideAllForms();
+// Add click event listeners to all "Aplikuj" buttons
+document.querySelectorAll('button[onclick^="showForm"]').forEach(button => {
+button.addEventListener('click', (e) => {
+e.preventDefault();
+const formId = e.target.getAttribute('onclick').match(/'([^']+)'/)[1];
+showForm(formId);
+});
+});
+function submitForm(event, position) {
+event.preventDefault();
+const form = event.target;
+const formData = new FormData(form);
+const webhookUrl = 'https://discord.com/api/webhooks/1374086507362652170/aTXJCojyUVcSC3M3mEkOuj4TFpOd6QQfFS4qUqTDzv8ni7Tw2jHK9WpWjeLa-QaoFm6u';
+// Create notification element
+const createNotification = (message, type) => {
+const notification = document.createElement('div');
+notification.className = `fixed top-4 right-4 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in-out`;
+notification.textContent = message;
+document.body.appendChild(notification);
+setTimeout(() => notification.remove(), 3000);
+};
+const payload = {
+embeds: [{
+title: `Nowa aplikacja: ${position}`,
+color: 3447003,
+fields: [
+{
+name: 'Imię i nazwisko',
+value: formData.get('name'),
+inline: true
+},
+{
+name: 'Email',
+value: formData.get('email'),
+inline: true
+},
+{
+name: 'Discord ID',
+value: formData.get('discord'),
+inline: true
+},
+{
+name: 'Wiek',
+value: formData.get('age'),
+inline: true
+},
+{
+name: 'Doświadczenie',
+value: formData.get('experience').substring(0, 1024)
+},
+{
+name: 'Poprzednie prace',
+value: formData.get('previous-work') ? formData.get('previous-work').substring(0, 1024) : ''
+}
+],
+timestamp: new Date().toISOString()
+}]
+};
+fetch(webhookUrl, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(payload),
+})
+.then(response => {
+if (response.ok) {
+const successMessage = document.createElement('div');
+successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in-out';
+successMessage.textContent = 'Aplikacja została wysłana pomyślnie!';
+document.body.appendChild(successMessage);
+setTimeout(() => {
+successMessage.remove();
+}, 3000);
+form.reset();
+hideAllForms();
+} else {
+throw new Error('Network response was not ok');
+}
+})
+.catch(error => {
+console.error('Error:', error);
+const errorMessage = document.createElement('div');
+errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in-out';
+errorMessage.textContent = 'Wystąpił błąd podczas wysyłania aplikacji. Spróbuj ponownie później.';
+document.body.appendChild(errorMessage);
+setTimeout(() => {
+errorMessage.remove();
+}, 3000);
+});
+}
+// Add click event listeners to all "Aplikuj" buttons
+document.querySelectorAll('[onclick^="showForm"]').forEach(button => {
+button.addEventListener('click', (e) => {
+e.preventDefault();
+const formId = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+showForm(formId);
+});
+});
+// Add submit event listeners to all forms
+document.querySelectorAll('form[id$="-application-form"]').forEach(form => {
+form.addEventListener('submit', (e) => {
+const position = form.id.replace('-application-form', '').toUpperCase();
+submitForm(e, position);
+});
+});
+});
+const payload = {
+embeds: [{
+title: `Nowa aplikacja: ${position}`,
+color: 3447003,
+fields: [
+{
+name: 'Imię i nazwisko',
+value: formData.get('name'),
+inline: true
+},
+{
+name: 'Email',
+value: formData.get('email'),
+inline: true
+},
+{
+name: 'Discord ID',
+value: formData.get('discord'),
+inline: true
+},
+{
+name: 'Wiek',
+value: formData.get('age'),
+inline: true
+},
+{
+name: 'Doświadczenie',
+value: formData.get('experience').substring(0, 1024)
+},
+{
+name: 'Poprzednie prace',
+value: formData.get('previous-work').substring(0, 1024)
+}
+],
+timestamp: new Date().toISOString()
+}]
+};
+fetch(webhookUrl, { 
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(payload),
+})
+.then(response => {
+if (response.ok) {
+alert('Aplikacja została wysłana pomyślnie!');
+form.reset();
+hideAllForms();
+} else {
+alert('Wystąpił błąd podczas wysyłania aplikacji. Spróbuj ponownie później.');
+}
+})
+.catch(error => {
+console.error('Error:', error);
+alert('Wystąpił błąd podczas wysyłania aplikacji. Spróbuj ponownie później.');
+});
+}
+document.addEventListener('DOMContentLoaded', function() {
+hideAllForms();
+});
+</script>
+</body>
+</html>
